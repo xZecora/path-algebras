@@ -1,0 +1,39 @@
+using VertexID = int
+using EdgeID = int
+using PathID = int
+
+Vertex
+   vertexID : VertexID
+   vertexLabel : std::string
+
+Edge
+   edgeID : EdgeID   // index into edgeList shown below
+   edgeLabel : std::string
+   startVertex : VertexID
+   endVertex : VertexID
+
+Graph
+   vertexList : std::vector<Vertex>
+   edgeList : std::vector<Edge>
+   getEdges : (VertexID,VertexID) -> std::vector<EdgeID> // get edges between two vertices
+
+Path
+   isZero : bool
+   isVertex : bool
+   startVertex : VertexID
+   endVertex : VertexID
+   pathID : PathID  // index into pathDictionary in PathTable
+   thePath : std::vector<EdgeID>  
+
+PathTable
+   pathDictionary : std::vector<Path> // stores the paths that we encounter in a table
+   reversePathDictionary : std::unordered_map<Path,PathID> // going from a Path to the pathID
+
+PathAlgebra
+   graph : Graph
+   multiplyPaths : (Path,Path) -> Path    // may add a new path to myPathTable if it hasn't yet been encountered
+   myPathTable : PathTable
+   constructor : (Matrix, std::vector<std::string>, std::vector<std::string>) // adjacency matrix, vertex labels, edge labels
+                                                                              // pre-populate PathTable with vertices and edges
+
+
