@@ -1,6 +1,7 @@
 using VertexID = int
 using EdgeID = int
 using PathID = int
+using WeightVector = std::vector<int>
 
 Vertex
    vertexID : VertexID
@@ -11,6 +12,7 @@ Edge
    edgeLabel : std::string
    startVertex : VertexID
    endVertex : VertexID
+   weightVector : WeightVector
 
 Graph
    vertexList : std::vector<Vertex>
@@ -22,6 +24,7 @@ Path
    isVertex : bool
    startVertex : VertexID
    endVertex : VertexID
+   weightVector : WeightVector  // will just be the sum of the weight vectors of the edges in the path
    pathID : PathID  // index into pathDictionary in PathTable
    thePath : std::vector<EdgeID>  
 
@@ -29,11 +32,26 @@ PathTable
    pathDictionary : std::vector<Path> // stores the paths that we encounter in a table
    reversePathDictionary : std::unordered_map<Path,PathID> // going from a Path to the pathID
 
+Field
+   add      : (FieldElement,FieldElement) -> FieldElement
+   subtract : (FieldElement,FieldElement) -> FieldElement
+   multiply : (FieldElement,FieldElement) -> FieldElement
+   divide   : (FieldElement,FieldElement) -> FieldElement
+   
+FieldElement
+   element : unsigned int in the case of a finite field, something else in the case of QQ or an extension of prime field or QQ
+
 PathAlgebra
    graph : Graph
+   field : Field
    multiplyPaths : (Path,Path) -> Path    // may add a new path to myPathTable if it hasn't yet been encountered
    myPathTable : PathTable
    constructor : (Matrix, std::vector<std::string>, std::vector<std::string>) // adjacency matrix, vertex labels, edge labels
                                                                               // pre-populate PathTable with vertices and edges
+   addPAElements : (PAElement,PAElement) -> PAElement
+   subtractPAElements : (PAElement,PAElement) -> PAElement
+   multiplyPAElements : (PAElement,PAElement) -> PAElement
 
-
+PAElement
+   element : std::vector<std::pair<PathID,FieldElement>> // want to keep the terms in sorted order
+   leadTerm : PathID
