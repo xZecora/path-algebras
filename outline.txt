@@ -41,17 +41,26 @@ Field
 FieldElement
    element : unsigned int in the case of a finite field, something else in the case of QQ or an extension of prime field or QQ
 
+PathOrder
+   pathWeight : Path -> WeightVector
+   comparePaths : (Path,Path) -> { LT, GT, EQ }
+
 PathAlgebra
    graph : Graph
    field : Field
+   pathOrder : PathOrder
    multiplyPaths : (Path,Path) -> Path    // may add a new path to myPathTable if it hasn't yet been encountered
    myPathTable : PathTable
+   constructor : (Matrix, std::vector<std::string>, std::vector<std::string>, std::vector<WeightVector>) // adjacency matrix, vertex labels, edge labels
+                                                                                                         // pre-populate PathTable with vertices and edges
+                                                                                                         // weight vectors of edges
    constructor : (Matrix, std::vector<std::string>, std::vector<std::string>) // adjacency matrix, vertex labels, edge labels
                                                                               // pre-populate PathTable with vertices and edges
+                                                                              // all weights are equal to one.
    addPAElements : (PAElement,PAElement) -> PAElement
    subtractPAElements : (PAElement,PAElement) -> PAElement
    multiplyPAElements : (PAElement,PAElement) -> PAElement
 
 PAElement
    element : std::vector<std::pair<PathID,FieldElement>> // want to keep the terms in sorted order
-   leadTerm : PathID
+                                                         // lead term is element[0].first
