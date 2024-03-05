@@ -1,24 +1,19 @@
+#pragma once
+
+#include "util.hpp"
 #include "Graph.hpp"
-#include <unordered_map>
 
-class Path{
-  bool isZero;
-  bool isVertex;
-  VertexID startVertex;
-  VertexID endVertex;
-  PathID pathID;
-  std::vector<EdgeID> thePath;
-};
+#include <vector>
 
-class PathTable{
-  std::vector<Path> pathDictionary;
-  std::unordered_map<Path,PathID> reversePathDictionary;
-};
+class Path
+{
+public:
 
-class PathAlgebra{
-  Graph graph;
-  PathTable myPathTable;
-  Path multiplyPaths(Path path1, Path path2);
-  PathAlgebra(std::vector<std::vector<int>> matrix, std::vector<std::string>, std::vector<std::string>);
-
+private:
+  bool mIsZero;
+  bool mIsVertex;
+  VertexID mStartVertex;
+  VertexID mEndVertex;
+  PathID mPathID;
+  std::vector<EdgeID> mPath;
 };
