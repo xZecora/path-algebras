@@ -8,6 +8,7 @@
 class Path
 {
 public:
+  
 
 private:
   bool mIsZero;
