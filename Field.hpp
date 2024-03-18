@@ -1,8 +1,9 @@
 class FieldElement
 {
+  friend class Field;
+
 public:
-   FieldElement(unsigned int element)
-      mElement(element) {}  
+   FieldElement(unsigned int element);
 
 private:
   unsigned int mElement;
@@ -36,13 +37,13 @@ public:
 
    FieldElement divide(FieldElement a, FieldElement b)
    {
-      return FieldElement {(a.mElement * invert(b.mElement)) % mCharacteristic};
+      return FieldElement {(a.mElement * invert(b.mElement).mElement) % mCharacteristic};
    } 
 
    FieldElement invert(FieldElement a)
    {
       if (a.mElement == 0) { std::cout << "Attempting to divide by zero." << std::endl; }
-      if (mCharacteristic == 2) then return a;
+      if (mCharacteristic == 2) return a;
       // any short-circuits?
       return power(a,mCharacteristic - 2);
    }
