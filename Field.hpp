@@ -1,24 +1,35 @@
+#pragma once
+
+#include <iostream>
+
 class FieldElement
 {
   friend class Field;
 
+  friend std::ostream& operator<<(std::ostream& ostr, FieldElement& f);
+
 public:
-   FieldElement(unsigned int element);
+   FieldElement(unsigned int element)
+     : mElement(element) { }
 
 private:
   unsigned int mElement;
 };
 
+std::ostream& operator<<(std::ostream& ostr, FieldElement& f)
+{
+   ostr << f.mElement;
+   return ostr;
+}
+
 // for now: this only implements finite prime fields
 class Field
 {
-  friend class FieldElement;
+public:
 
   // will trust that the users inputs a prime characteristic
   Field(unsigned int characteristic)
     : mCharacteristic(characteristic) { }
-
-public:
 
    inline FieldElement add(FieldElement a, FieldElement b)
    {
