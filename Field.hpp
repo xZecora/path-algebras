@@ -6,7 +6,7 @@ class FieldElement
 {
   friend class Field;
 
-  friend std::ostream& operator<<(std::ostream& ostr, FieldElement& f);
+  friend std::ostream& operator<<(std::ostream& ostr, const FieldElement& f);
 
 public:
    FieldElement(unsigned int element)
@@ -15,12 +15,6 @@ public:
 private:
   unsigned int mElement;
 };
-
-std::ostream& operator<<(std::ostream& ostr, FieldElement& f)
-{
-   ostr << f.mElement;
-   return ostr;
-}
 
 // for now: this only implements finite prime fields
 class Field

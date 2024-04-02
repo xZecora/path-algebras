@@ -1,5 +1,11 @@
 #include "Field.hpp"
 
+std::ostream& operator<<(std::ostream& ostr, const FieldElement& f)
+{
+   ostr << f.mElement;
+   return ostr;
+}
+
 // implement logarithmic exponentiation
 FieldElement Field::power(FieldElement a, unsigned int pow)
 {
