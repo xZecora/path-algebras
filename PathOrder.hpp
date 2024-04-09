@@ -3,10 +3,12 @@
 #include "Path.hpp"
 #include "util.hpp"
 
-enum relations { EQ, LT, GT };
+enum class PathComp { EQ, LT, GT };
 
 class PathOrder {
-  private:
+public:
+    PathComp comparePaths(Path path1, Path path2);
+private:
+    std::vector<WeightVector> edgeWeights;
     WeightVector pathWeight(Path path);
-    int comparePaths(Path path1, Path path2);
 };
