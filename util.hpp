@@ -12,3 +12,6 @@ using PathID = int;
 using VertexLabel = std::string;
 using EdgeLabel = std::string;
 using WeightVector = std::vector<int>;
+
+enum class Compare { EQ, LT, GT };
+
