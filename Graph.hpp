@@ -14,8 +14,12 @@ class Edge{
   EdgeLabel edgeLabel;
   VertexID startVertexID;
   VertexID endVertexID;
+  int weight; // Need to store this to reference elsewhere
 
-  Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID);
+  Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID, int weight);
+
+  public:
+    int getWeight(); // need to access weight nonlocally
 };
 
 class Graph{
