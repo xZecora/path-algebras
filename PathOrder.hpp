@@ -11,6 +11,6 @@ private:
     Compare lengthLexCompare(const Path& path1, const Path& path2) const;
 
     std::vector<WeightVector> edgeWeights;
-    WeightVector pathWeight(Path path);
+    WeightVector pathWeight(Path path) const;
     bool hasWeights;
 };
