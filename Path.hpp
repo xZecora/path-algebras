@@ -8,9 +8,9 @@
 class Path
 {
 public:
-  const std::vector<EdgeID>& getEdgeList(); // needed to access the edge list nonlocally
+  const std::vector<EdgeID>& getEdgeList() { return mPath; }; // needed to access the edge list nonlocally
 
-  size_t length() { return mPath.size(); }
+  size_t length() const { return mPath.size(); }
 
 private:
   bool mIsZero;

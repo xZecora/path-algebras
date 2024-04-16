@@ -1,7 +1,7 @@
 #include <numeric>
 #include "PathOrder.hpp"
 
-WeightVector PathOrder::pathWeight(Path path1){
+WeightVector PathOrder::pathWeight(Path path1) const {
   WeightVector weightVector = {};
   int size = path1.getEdgeList().size();
   /*
@@ -43,7 +43,7 @@ Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const
      // TODO
   }
 
-  return EQ;
+  return Compare::EQ;
 }
 
 Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
