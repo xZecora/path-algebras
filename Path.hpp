@@ -1,14 +1,14 @@
 #pragma once
 
 #include "util.hpp"
-#include "Graph.hpp"
+//#include "Graph.hpp"
 
 #include <vector>
 
 class Path
 {
 public:
-  const std::vector<EdgeID>& getEdgeList() { return mPath; }; // needed to access the edge list nonlocally
+  const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
   size_t length() const { return mPath.size(); }
 

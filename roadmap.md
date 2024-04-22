@@ -1,7 +1,7 @@
 General Roadmap
 
-- [ ] Finish lengthLexCompare
-- [ ] Write constructor(s) for vertex and edges
+- [X] Finish lengthLexCompare
+- [X] Write constructor(s) for vertex and edges
 - [ ] Write constructor for paths
 - [ ] Printing function for a path (and vertex/edge) (as well as  - two versions: one just prints ids of edges/vertices, one that uses the labels
 - [ ] Decide how to/implement storage of the adjacency matrix of the graph.
