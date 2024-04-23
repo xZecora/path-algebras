@@ -10,10 +10,15 @@ WeightVector PathOrder::pathWeight(Path path1) const {
      dictionary.
   */
   for(int i = 0; i < size; i++){
-    weightVector.push_back(path1.getEdgeList()[size - i]);
+    weightVector.push_back(path1.getEdgeList()[i]);
   }
   return weightVector;
 }
+
+// TODO: have a version of pathWeight which accepts an integer i
+//       and returns the ith component of the path weight
+//       rather than the entire weight vector.  Then use that in weightCompare
+//       and compute the weight vector on the fly for the comparison.
 
 /* This function takes two paths and compares there total
    weights to see which is larger, then returns enum values
@@ -31,7 +36,7 @@ Compare PathOrder::weightCompare(const Path& path1, const Path& path2) const
     else if (weightVector1[i] < weightVector2[i])
       return Compare::LT;
   }
-  return PathOrder::lengthLexCompare(path1, path2);
+  return lengthLexCompare(path1, path2);
 }
 
 /*
@@ -60,7 +65,6 @@ Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const
 
 Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
 {
-   Compare result;
    if (hasWeights)
    {
       return weightCompare(path1, path2);
