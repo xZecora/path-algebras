@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Field.hpp"
+#include "Graph.hpp"
 
 int main(int argc, char** argv)
 {
@@ -10,6 +11,8 @@ int main(int argc, char** argv)
    std::cout << "Field element a: " << a << std::endl;
    std::cout << "a to the power 15 in field: " << myField.power(a,15)
              << std::endl;
+
+   Graph myGraph({{1}});
 
    return 0;
 }

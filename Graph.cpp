@@ -1,10 +1,92 @@
+#include <sstream>
+#include <string>
 #include "Graph.hpp"
+
+// adjMatrix is the dense representation of the data
+void buildVerticesAndEdges(std::vector<std::vector<int>> adjMatrix,
+			   std::vector<Vertex>& vertList,
+			   std::vector<Edge>& edgeList,
+			   const std::vector<std::string>& vertLabels,
+			   const std::vector<std::string>& edgeLabels)
+{
+  int edgeIndex = 0;
+  for(int i = 0; i < adjMatrix.size(); i++)
+  {
+    // Make sure we have square matrix, otherwise exit program
+    // TODO Write error handler for this.
+    if(adjMatrix.size() != adjMatrix[i].size())
+      exit(1);
+
+    vertList.push_back(Vertex(i, vertLabels[i]));
+
+    for(int j = 0; j < adjMatrix[i].size();j++)
+      for(int k = 0; k < adjMatrix[i][j];k++)
+        edgeList.push_back(Edge(EdgeID(edgeIndex++), edgeLabels[i], VertexID(i), VertexID(j)));
+  }
+}
+
+std::vector<std::string> buildVertexLabels(int numVertices)
+{
+  std::vector<std::string> result;
+  std::basic_ostringstream<char> buf;
+  for(int i = 0; i < numVertices; ++i)
+  {
+    buf << "v" << i+1;
+    result.push_back(buf.str());
+  }
+  return result;
+}
+
+std::vector<std::string> buildVertexLabels(std::string baseName, int numVertices)
+{
+  std::vector<std::string> result;
+  std::basic_ostringstream<char> buf;
+  for(int i = 0; i < numVertices; ++i)
+  {
+    buf << baseName << i+1;
+    result.push_back(buf.str());
+  }
+  return result;
+}
+
+std::vector<std::string> buildEdgeLabels(int numEdges)
+{
+  std::vector<std::string> result;
+  std::basic_ostringstream<char> buf;
+  for(int i = 0; i < numEdges; ++i)
+  {
+    buf << "e" << i+1;
+    result.push_back(buf.str());
+  }
+  return result;
+}
+
+std::vector<std::string> buildEdgeLabels(std::string baseName, int numEdges)
+{
+  std::vector<std::string> result;
+  std::basic_ostringstream<char> buf;
+  for(int i = 0; i < numEdges; ++i)
+  {
+    buf << baseName << i+1;
+    result.push_back(buf.str());
+  }
+  return result;
+}
+
+std::vector<std::vector<int>> sparseToDense(const std::vector<std::vector<std::pair<int, int>>>& sparseMatrix)
+{
+  return {};
+}
+
+// Vertex class members
 
 Vertex::Vertex(VertexID id, std::string label)
    : vertexID(id),
      vertexLabel(label)
 {
 }
+
+// Edge class members
 
 Edge::Edge(EdgeID id, EdgeLabel label, VertexID start, VertexID end, std::vector<int> weight)
    : edgeID(id),
@@ -28,70 +110,46 @@ std::vector<int> Edge::getWeight() {
   return edgeWeight;
 }
 
+// Graph class members
+
 /*
  * This function takes in an adjacency matrix and constructs a graph based on it
  * TODO Need to implement label vectors, currently using empty label placeholders
  */
 
 // dense adjacency matrix constructor
-Graph::Graph(std::vector<std::vector<int>> adjMatrix)
+Graph::Graph(const std::vector<std::vector<int>>& adjMatrix)
 {
-  // Make sure we have square matrix, otherwise exit program
-  
-  // TODO Write error handler for this.
-  if(adjMatrix.size() != adjMatrix[1].size())
-    exit(1);
+  std::vector<std::string> vertexLabels = buildVertexLabels(adjMatrix.size());
 
-  int edgeIndex = 0;
-  for(int i = 0; i < adjMatrix.size(); i++)
-  {
-    vertexList.push_back(Vertex(i, ""));
+  int numEdges = 0;
+  for(int i = 0; i < adjMatrix.size(); ++i)
+    for(int j = 0; j < adjMatrix[i].size(); ++j)
+      numEdges += adjMatrix[i][j];
 
-    for(int j = 0; j < adjMatrix[i].size();j++)
-      for(int k = 0; k < adjMatrix[i][j];k++)
-        edgeList.push_back(Edge(EdgeID(edgeIndex++), "", VertexID(i), VertexID(j)));
-  }
+  std::vector<std::string> edgeLabels = buildEdgeLabels(numEdges);
 
+  buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);
 }
 
 // sparse adjacency matrix constructor (TODO: fix?)
-Graph::Graph(std::vector<std::vector<std::pair<int, int>>> adjMatrix)
+Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix)
 {
-  // Make sure we have square matrix, otherwise exit program
+  // adjMatrix is the dense representation of the sparse input
+  std::vector<std::vector<int>> adjMatrix = sparseToDense(sparseAdjMatrix);
   
-  int edgeIndex = 0;
-  for(int i = 0; i < adjMatrix.size(); i++)
-  {
-    // TODO Write error handler for this.
-    if(adjMatrix.size() > adjMatrix[1].size())
-      exit(1);
+  std::vector<std::string> vertexLabels = buildVertexLabels(adjMatrix.size());
 
-    vertexList.push_back(Vertex(i, ""));
+  int numEdges = 0;
+  for(int i = 0; i < adjMatrix.size(); ++i)
+    for(int j = 0; j < adjMatrix[i].size(); ++j)
+      numEdges += adjMatrix[i][j];
 
-    for(int j = 0; j < adjMatrix[i].size();j++)
-      for(int k = 0; k < adjMatrix[i][j].second;k++)
-        edgeList.push_back(Edge(EdgeID(edgeIndex++), "", VertexID(i), VertexID(j)));
-  }
-  // buildVertexList(vertexList, vertLabels);
-  // buildEdgeList(edgeList, edgeLabels);
+  std::vector<std::string> edgeLabels = buildEdgeLabels(numEdges);
 
-}
-
-void buildVertexList(std::vector<Vertex>& vertList, std::vector<string> vertLabels)
-{
-   
-}
-
-std::vector<string> buildVertexLabels(int numVertices)
-{
-}
-
-std::vector<string> buildVertexLabels(std::string baseName, int numVertices)
-{
+  buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);  
 }
 
 
-// function to convert sparse matrix to dense matrix
-// functions which build vectors with labels of vertices and edges
-// function which sets all members for graph object (adjMatrix, vertex labels, edge labels)
+
 

@@ -1,4 +1,5 @@
 #pragma once
+
 #include "util.hpp"
 #include "PathTable.hpp"
 #include <vector>
@@ -28,10 +29,15 @@ class Edge{
 class Graph{
   friend PathTable;
 
+private:
   std::vector<Vertex> vertexList;
   std::vector<Edge> edgeList;
 
+public:
+  Graph(const std::vector<std::vector<int>>& adjMatrix);
+
+  Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix);
+
   std::vector<EdgeID> getEdges(VertexID endVertex, VertexID startVertex); // returns a list of all edges between two vertices.
 
-  Graph(std::vector<std::vector<std::pair<int, int>>>);
 };
