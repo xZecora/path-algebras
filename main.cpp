@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Field.hpp"
 #include "Graph.hpp"
+#include "PathAlgebra.hpp"
 
 int main(int argc, char** argv)
 {
@@ -13,6 +14,8 @@ int main(int argc, char** argv)
              << std::endl;
 
    Graph myGraph({{1}});
+
+   PathAlgebra myPathAlgebra(myGraph,myField);
 
    return 0;
 }
