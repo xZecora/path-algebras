@@ -19,12 +19,43 @@ void buildVerticesAndEdges(std::vector<std::vector<int>> adjMatrix,
 
     vertList.push_back(Vertex(i, vertLabels[i]));
 
-    for(int j = 0; j < adjMatrix[i].size();j++)
-      for(int k = 0; k < adjMatrix[i][j];k++)
+    for(int j = 0; j < adjMatrix[i].size(); j++)
+      for(int k = 0; k < adjMatrix[i][j]; k++)
         edgeList.push_back(Edge(EdgeID(edgeIndex++), edgeLabels[i], VertexID(i), VertexID(j)));
   }
 }
 
+std::vector<std::string> buildLabels(int numLabels, std::string baseName){
+  std::vector<std::string> result;
+  std::basic_ostringstream<char> buf;
+  for(int i = 0; i < numLabels; ++i)
+  {
+    buf << baseName << i+1;
+    result.push_back(buf.str());
+  }
+  return result;
+}
+
+std::vector<std::string> buildVertexLabels(int numVertices)
+{
+  return buildLabels(numVertices, "v");
+}
+std::vector<std::string> buildEdgeLabels(int numVertices)
+{
+  return buildLabels(numVertices, "e");
+}
+
+std::vector<std::string> buildVertexLabels(int numVertices, std::string baseName)
+{
+  return buildLabels(numVertices, baseName);
+}
+
+std::vector<std::string> buildEdgeLabels(int numVertices, std::string baseName)
+{
+  return buildLabels(numVertices, baseName);
+}
+
+/*
 std::vector<std::string> buildVertexLabels(int numVertices)
 {
   std::vector<std::string> result;
@@ -72,11 +103,7 @@ std::vector<std::string> buildEdgeLabels(std::string baseName, int numEdges)
   }
   return result;
 }
-
-std::vector<std::vector<int>> sparseToDense(const std::vector<std::vector<std::pair<int, int>>>& sparseMatrix)
-{
-  return {};
-}
+*/
 
 // Vertex class members
 
@@ -111,6 +138,25 @@ std::vector<int> Edge::getWeight() {
 }
 
 // Graph class members
+
+/*
+ * This function takes in a sparse matrix and converts it to a dense matrix for all of our logic purposes
+ */
+std::vector<std::vector<int>> sparseToDense(const std::vector<std::vector<std::pair<int, int>>>& sparseMatrix)
+{
+  std::vector<std::vector<int>> denseMatrix = {};
+  for(int i = 0; i < sparseMatrix.size(); ++i)
+    denseMatrix.push_back(std::vector<int>(sparseMatrix.size()));
+
+  int i = 0;
+  for(auto it = sparseMatrix.begin(); it != sparseMatrix.end(); it++, ++i){
+    for(auto jt = it->begin(); jt!=it->end(); jt++){
+      denseMatrix[i][jt->first] = jt->second;
+    }
+  }
+
+  return denseMatrix;
+}
 
 /*
  * This function takes in an adjacency matrix and constructs a graph based on it
@@ -149,7 +195,3 @@ Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatri
 
   buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);  
 }
-
-
-
-
