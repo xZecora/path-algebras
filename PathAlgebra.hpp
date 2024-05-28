@@ -20,5 +20,5 @@ public:
 private:
   Graph& mGraph;
   Field& mField;
-  // PathTable mPathTable;
+  PathTable mPathTable;
 };

@@ -17,5 +17,8 @@ int main(int argc, char** argv)
 
    PathAlgebra myPathAlgebra(myGraph,myField);
 
+   Edge tempEdge = myGraph.edgeList[0];
+   
+
    return 0;
 }

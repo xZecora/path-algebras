@@ -10,5 +10,5 @@ class PathTable
 
 private:
   std::vector<Path> mPathDictionary;
-  std::unordered_map<Path,PathID> mReversePathDictionary;
+  std::unordered_map<Path,PathID,PathHash> mReversePathDictionary;
 };
