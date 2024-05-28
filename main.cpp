@@ -13,12 +13,13 @@ int main(int argc, char** argv)
    std::cout << "a to the power 15 in field: " << myField.power(a,15)
              << std::endl;
 
-   Graph myGraph({{1}});
+   Graph myGraph({ std::vector<int> {1} });
 
    PathAlgebra myPathAlgebra(myGraph,myField);
 
-   Edge tempEdge = myGraph.edgeList[0];
-   
+   Path myPath(0,0,{0,0,0,0,0});
+
+   // Path multPath = myPathAlgebra.multiplyPaths(myPath,myPath);
 
    return 0;
 }

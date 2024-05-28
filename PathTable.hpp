@@ -7,6 +7,12 @@
 
 class PathTable
 {
+public:
+  PathTable()
+    : mPathDictionary({Path()}),
+      mReversePathDictionary( {{ mPathDictionary[0], (PathID) 0 }} )
+  {
+  }
 
 private:
   std::vector<Path> mPathDictionary;

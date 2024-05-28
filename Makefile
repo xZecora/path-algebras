@@ -1,4 +1,4 @@
-CPP=g++
+CPP=/opt/homebrew/bin/g++-13
 CPPFLAGS=-std=c++17 -I.
 
 main: main.o Field.o Graph.o

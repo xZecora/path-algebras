@@ -12,46 +12,45 @@ public:
 
   size_t length() const { return mPath.size(); }
 
-  Path(Graph& graph, std::vector<EdgeID> pathEdgeList, bool checkValidity = false)
-    : mGraph(graph),
-      mIsZero(false),
+  Path(VertexID startVertex,
+       VertexID endVertex,
+       std::vector<EdgeID> pathEdgeList,
+       bool checkValidity = false)
+    : mIsZero(false),
       mIsVertex(false),
-      mStartVertex(graph.getStartVertex(pathEdgeList[0])),
-      mEndVertex(graph.getEndVertex(pathEdgeList[pathEdgeList.size()-1])),
+      mStartVertex(startVertex),
+      mEndVertex(endVertex),
       mPathID(-1),  // -1 indicates that path id is currently unknown
       mPath(pathEdgeList)
   {
-    // creator of this object should verify edgeList is not empty and 
-    // that it is a valid path
   }
 
-  Path(Graph& graph, VertexID vertexID)
-    : mGraph(graph),
-      mIsZero(false),
+  Path(VertexID vertexID)
+    : mIsZero(false),
       mIsVertex(true),
       mStartVertex(vertexID),
       mEndVertex(vertexID),
       mPathID(-1),  // -1 indicates that path id is currently unknown
       mPath({})
   {
-    // case of single vertex
-    // creator of this object should ensure that vertex is valid
   }
 
-  Path(Graph& graph) // case of the zero path
-    : mGraph(graph),
-      mIsZero(true),
+  Path() // case of the zero path
+    : mIsZero(true),
       mIsVertex(false),
       mStartVertex(-1),
       mEndVertex(-1),
       mPathID(0),  // zero path should be first element in dictionary
       mPath({})
   {
-    
+  }
+
+  bool std::operator==(const Path p, const Path q) 
+  {
+    return (p.mPathID == q.mPathID);
   }
   
 private:
-  Graph& mGraph;
   bool mIsZero;
   bool mIsVertex;
   VertexID mStartVertex;
