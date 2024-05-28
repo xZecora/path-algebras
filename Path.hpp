@@ -45,11 +45,21 @@ public:
   {
   }
 
-  bool std::operator==(const Path p, const Path q) 
+  bool operator==(const Path p) const
   {
-    return (p.mPathID == q.mPathID);
+    // return false if they are not the same size
+    if(p.mPath.size() != this->mPath.size())
+      return false;
+    // iterate over the lists to check equality
+    int i = 0;
+    for(EdgeID id : this->mPath) {
+      if(id != p.mPath[i])
+        return false;
+      i++;
+    }
+    return true;
   }
-  
+
 private:
   bool mIsZero;
   bool mIsVertex;
