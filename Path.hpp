@@ -7,8 +7,12 @@
 class Path
 {
 friend class PathHash;
+friend class PathAlgebra;
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
+
+  std::string printLabels();
+  std::string printID();
 
   size_t length() const { return mPath.size(); }
 

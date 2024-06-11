@@ -7,6 +7,7 @@
 
 class PathTable
 {
+friend class PathAlgebra;
 public:
   PathTable()
     : mPathDictionary({Path()}),

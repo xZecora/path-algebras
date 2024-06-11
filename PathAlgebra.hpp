@@ -13,7 +13,9 @@ public:
   PathAlgebra(Graph& graph, Field& field) :
     mGraph(graph),
     mField(field)
-  {}
+  {
+    mPathTable = PathTable();
+  }
 
   Path multiplyPaths(Path path1, Path path2);
 
