@@ -2,11 +2,13 @@
 
 #include "util.hpp"
 #include "Graph.hpp"
+#include <iostream>
 #include <vector>
 
 class Path
 {
 friend class PathHash;
+friend class KeyEqual;
 friend class PathAlgebra;
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
@@ -49,18 +51,31 @@ public:
   {
   }
 
-  bool operator==(const Path p) const
+  bool operator==(const Path& p) const
   {
+    std::cout << "Checking Equality" << std::endl;
+    if(p.mPathID != -1 && this->mPathID != -1)
+    {
+      std::cout << "IDs Set" << std::endl;
+      return p.mPathID == this->mPathID;
+    }
     // return false if they are not the same size
     if(p.mPath.size() != this->mPath.size())
+    {
+      std::cout << "Different Sizes" << std::endl;
       return false;
+    }
     // iterate over the lists to check equality
     int i = 0;
     for(EdgeID id : this->mPath) {
       if(id != p.mPath[i])
+      {
+        std::cout << "Different " << i << "th coordinate" << std::endl;
         return false;
+      }
       i++;
     }
+    std::cout << "Equal Paths" << std::endl;
     return true;
   }
 
@@ -71,6 +86,37 @@ private:
   VertexID mEndVertex;
   PathID mPathID;
   std::vector<EdgeID> mPath;
+};
+
+class KeyEqual {
+  public:
+  bool operator()(const Path& lhs, const Path& rhs) const
+  {
+    std::cout << "Checking Equality" << std::endl;
+    if(lhs.mPathID != -1 && rhs.mPathID != -1)
+    {
+      std::cout << "IDs Set" << std::endl;
+      return lhs.mPathID == rhs.mPathID;
+    }
+    // return false if they are not the same size
+    if(lhs.mPath.size() != rhs.mPath.size())
+    {
+      std::cout << "Different Sizes" << std::endl;
+      return false;
+    }
+    // iterate over the lists to check equality
+    int i = 0;
+    for(EdgeID id : rhs.mPath) {
+      if(id != lhs.mPath[i])
+      {
+        std::cout << "Different " << i << "th coordinate" << std::endl;
+        return false;
+      }
+      i++;
+    }
+    std::cout << "Equal Paths" << std::endl;
+    return true;
+  }
 };
 
 class PathHash {
@@ -85,9 +131,8 @@ public:
     }
     for (auto e : p.mPath) 
     {
-       hash += 12345*hash + e;
+       hash += 12345*hash + e + 1;
     }
     return hash;
   }
 };
-

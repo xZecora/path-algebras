@@ -17,10 +17,11 @@ public:
     mPathTable = PathTable();
   }
 
-  Path multiplyPaths(Path path1, Path path2);
+  PathID multiplyPaths(Path path1, Path path2);
 
 private:
   Graph& mGraph;
   Field& mField;
+public: // temp
   PathTable mPathTable;
 };
