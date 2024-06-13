@@ -25,23 +25,16 @@ int main(int argc, char** argv)
    PathID multPath1 = myPathAlgebra.multiplyPaths(myPath,myPath);
    PathID multPath2 = myPathAlgebra.multiplyPaths(myPath,myPath);
 
-   std::cout << int(myPathAlgebra.mPathTable.mReversePathDictionary.contains(myPathAlgebra.multiplyPaths(myPath, myPath))) << std::endl;
+   std::cout << "PathID1: " << multPath1 << std::endl;
+   std::cout << "PathID2: " << multPath2 << std::endl;
 
-   for(int i = 0; i < myPathAlgebra.mPathTable.mPathDictionary.size(); i++){
-     std::cout << i << ": " << myPathAlgebra.mPathTable.mPathDictionary[i].printID() << std::endl;
-   }
+   Path newPath1 = myPathAlgebra.mPathTable.mPathDictionary[multPath1];
+   Path newPath2 = myPathAlgebra.mPathTable.mPathDictionary[multPath2];
 
-   PathHash hash;
-   std::cout << "Path 1 hash: " << hash(myPathAlgebra.mPathTable.mPathDictionary[multPath1]) << std::endl;
-   std::cout << "Path 2 hash: " << hash(myPathAlgebra.mPathTable.mPathDictionary[multPath2]) << std::endl;
+   std::cout << "Contains1? " << myPathAlgebra.mPathTable.mReversePathDictionary.contains(newPath1) << std::endl;
+   std::cout << "Contains2? " << myPathAlgebra.mPathTable.mReversePathDictionary.contains(newPath2) << std::endl;
 
-   std::cout << "Are they equal: " << int(myPathAlgebra.mPathTable.mReversePathDictionary.key_eq()(myPathAlgebra.mPathTable.mPathDictionary[multPath1], myPathAlgebra.mPathTable.mPathDictionary[multPath2])) << std::endl;
-
-   std::cout << "Path 1 hash: " << myPathAlgebra.mPathTable.mReversePathDictionary.hash_function()(myPathAlgebra.mPathTable.mPathDictionary[multPath1]) << std::endl;
-   std::cout << "Path 2 hash: " << myPathAlgebra.mPathTable.mReversePathDictionary.hash_function()(myPathAlgebra.mPathTable.mPathDictionary[multPath2]) << std::endl;
-
-   std::cout << multPath1 << std::endl;
-   std::cout << multPath2 << std::endl;
+   std::cout << myPathAlgebra.mPathTable.mReverseDictionary.size()
 
    return 0;
 }

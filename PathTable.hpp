@@ -18,5 +18,6 @@ public:
 private:
 public: //temp
   std::vector<Path> mPathDictionary;
-  std::unordered_map<Path,PathID,PathHash,KeyEqual> mReversePathDictionary;
+  std::unordered_map<Path,PathID,PathHash,PathEqual> mReversePathDictionary;
+  //std::unordered_map<Path,PathID,PathHash> mReversePathDictionary;
 };

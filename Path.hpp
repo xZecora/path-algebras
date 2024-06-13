@@ -7,9 +7,10 @@
 
 class Path
 {
-friend class PathHash;
-friend class KeyEqual;
-friend class PathAlgebra;
+  friend class PathHash;
+  friend class PathEqual;
+  friend class PathAlgebra;
+  
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
@@ -31,7 +32,8 @@ public:
   {
   }
 
-  Path(VertexID vertexID)
+  explicit Path(VertexID vertexID)   // make explicit to avoid accidental calls to contains/find on PathIDs.
+                                     // in fact, should we just make PathID and VertexID structs?
     : mIsZero(false),
       mIsVertex(true),
       mStartVertex(vertexID),
@@ -51,6 +53,7 @@ public:
   {
   }
 
+  /*
   bool operator==(const Path& p) const
   {
     std::cout << "Checking Equality" << std::endl;
@@ -78,6 +81,7 @@ public:
     std::cout << "Equal Paths" << std::endl;
     return true;
   }
+  */
 
 private:
   bool mIsZero;
@@ -88,7 +92,7 @@ private:
   std::vector<EdgeID> mPath;
 };
 
-class KeyEqual {
+class PathEqual {
   public:
   bool operator()(const Path& lhs, const Path& rhs) const
   {
@@ -129,9 +133,11 @@ public:
       hash = p.mStartVertex;
       return hash;
     }
+    hash = p.mPath[0];
     for (auto e : p.mPath) 
     {
-       hash += 12345*hash + e + 1;
+       hash ^= e + 0x9e3779b9 + (hash << 6) + (hash >> 2);
+       //hash += 12345*hash + e + 1;
     }
     return hash;
   }
