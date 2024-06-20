@@ -19,17 +19,20 @@ void buildVerticesAndEdges(std::vector<std::vector<int>> adjMatrix,
 
     vertList.push_back(Vertex(i, vertLabels[i]));
 
-    for(int j = 0; j < adjMatrix[i].size(); j++)
-      for(int k = 0; k < adjMatrix[i][j]; k++)
-        edgeList.push_back(Edge(EdgeID(edgeIndex++), edgeLabels[i], VertexID(i), VertexID(j)));
+    for(int j = 0; j < adjMatrix[i].size(); j++){
+      for(int k = 0; k < adjMatrix[i][j]; k++){
+        edgeList.push_back(Edge(EdgeID(edgeIndex), edgeLabels[edgeIndex], VertexID(i), VertexID(j)));
+        edgeIndex++;
+      }
+    }
   }
 }
 
 std::vector<std::string> buildLabels(int numLabels, std::string baseName){
   std::vector<std::string> result;
-  std::basic_ostringstream<char> buf;
   for(int i = 0; i < numLabels; ++i)
   {
+    std::basic_ostringstream<char> buf;
     buf << baseName << i+1;
     result.push_back(buf.str());
   }
@@ -40,9 +43,9 @@ std::vector<std::string> buildVertexLabels(int numVertices)
 {
   return buildLabels(numVertices, "v");
 }
-std::vector<std::string> buildEdgeLabels(int numVertices)
+std::vector<std::string> buildEdgeLabels(int numEdges)
 {
-  return buildLabels(numVertices, "e");
+  return buildLabels(numEdges, "e");
 }
 
 std::vector<std::string> buildVertexLabels(int numVertices, std::string baseName)
@@ -50,9 +53,9 @@ std::vector<std::string> buildVertexLabels(int numVertices, std::string baseName
   return buildLabels(numVertices, baseName);
 }
 
-std::vector<std::string> buildEdgeLabels(int numVertices, std::string baseName)
+std::vector<std::string> buildEdgeLabels(int numEdges, std::string baseName)
 {
-  return buildLabels(numVertices, baseName);
+  return buildLabels(numEdges, baseName);
 }
 
 /*

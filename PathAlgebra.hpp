@@ -19,9 +19,13 @@ public:
 
   PathID multiplyPaths(Path path1, Path path2);
 
+  void addToPathTable(Path& path)
+  {
+    this->mPathTable.addToTable(path);
+  }
+
 private:
   Graph& mGraph;
   Field& mField;
-public: // temp
   PathTable mPathTable;
 };

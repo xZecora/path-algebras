@@ -16,25 +16,26 @@ int main(int argc, char** argv)
    //Graph myGraph({ std::vector<int> {1} });
    Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
 
-   PathAlgebra myPathAlgebra(myGraph,myField);
+   for(auto itr: myGraph.edgeList){
+      std::cout << itr.edgeLabel << std::endl;
+   }
+
+   PathAlgebra myPathAlgebra(myGraph, myField);
 
    Path myPath(0,0,{0,0,0,0,0});
+   Path myPath2(1,2,{1,2,3,4,5});
 
-   std::cout << myPath.printID() << std::endl;
+   myPathAlgebra.addToPathTable(myPath);
+
+   std::cout << myPath.printEdgeID() << std::endl;
+   std::cout << myGraph.printEdgeLabel(myPath) << std::endl;
+   std::cout << myGraph.printEdgeLabel(myPath2) << std::endl;
 
    PathID multPath1 = myPathAlgebra.multiplyPaths(myPath,myPath);
    PathID multPath2 = myPathAlgebra.multiplyPaths(myPath,myPath);
 
    std::cout << "PathID1: " << multPath1 << std::endl;
    std::cout << "PathID2: " << multPath2 << std::endl;
-
-   Path newPath1 = myPathAlgebra.mPathTable.mPathDictionary[multPath1];
-   Path newPath2 = myPathAlgebra.mPathTable.mPathDictionary[multPath2];
-
-   std::cout << "Contains1? " << myPathAlgebra.mPathTable.mReversePathDictionary.contains(newPath1) << std::endl;
-   std::cout << "Contains2? " << myPathAlgebra.mPathTable.mReversePathDictionary.contains(newPath2) << std::endl;
-
-   std::cout << myPathAlgebra.mPathTable.mReverseDictionary.size()
 
    return 0;
 }

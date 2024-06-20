@@ -1,7 +1,6 @@
 #pragma once
 
 #include "util.hpp"
-#include "Graph.hpp"
 #include <iostream>
 #include <vector>
 
@@ -14,8 +13,10 @@ class Path
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
-  std::string printLabels();
-  std::string printID();
+  std::string printEdgeLabels();
+  std::string printEdgeID();
+
+  PathID getID();
 
   size_t length() const { return mPath.size(); }
 
@@ -51,6 +52,11 @@ public:
       mPathID(0),  // zero path should be first element in dictionary
       mPath({})
   {
+  }
+
+  const std::vector<EdgeID>& getPathList()
+  {
+    return this->mPath;
   }
 
   /*
@@ -96,16 +102,13 @@ class PathEqual {
   public:
   bool operator()(const Path& lhs, const Path& rhs) const
   {
-    std::cout << "Checking Equality" << std::endl;
     if(lhs.mPathID != -1 && rhs.mPathID != -1)
     {
-      std::cout << "IDs Set" << std::endl;
       return lhs.mPathID == rhs.mPathID;
     }
     // return false if they are not the same size
     if(lhs.mPath.size() != rhs.mPath.size())
     {
-      std::cout << "Different Sizes" << std::endl;
       return false;
     }
     // iterate over the lists to check equality
@@ -113,12 +116,10 @@ class PathEqual {
     for(EdgeID id : rhs.mPath) {
       if(id != lhs.mPath[i])
       {
-        std::cout << "Different " << i << "th coordinate" << std::endl;
         return false;
       }
       i++;
     }
-    std::cout << "Equal Paths" << std::endl;
     return true;
   }
 };

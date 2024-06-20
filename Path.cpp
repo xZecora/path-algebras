@@ -18,9 +18,9 @@ std::string Path::printLabels()
 }
 */
 
-std::string Path::printLabels() { return this->printID(); }
+std::string Path::printEdgeLabels() { return this->printEdgeID(); }
 
-std::string Path::printID()
+std::string Path::printEdgeID()
 {
   std::string output = "";
   int i = 0;
@@ -33,4 +33,8 @@ std::string Path::printID()
     i++;
   }
   return output;
+}
+
+PathID Path::getID() {
+  return this->mPathID;
 }

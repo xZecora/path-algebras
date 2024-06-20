@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Path.hpp"
 #include "util.hpp"
 #include <vector>
 
@@ -15,8 +16,10 @@ class Edge{
   friend class Graph;
 
 private:
+public://temp
   EdgeID edgeID;
   EdgeLabel edgeLabel;
+private:  //temp
   VertexID startVertexID;
   VertexID endVertexID;
   std::vector<int> edgeWeight; // Need to store this to reference elsewhere
@@ -26,7 +29,6 @@ private:
   Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID);
 
   std::vector<int> getWeight(); // need to access weight nonlocally
-  
 };
 
 class Graph{
@@ -40,12 +42,28 @@ public:
 
 public:
   Graph(const std::vector<std::vector<int>>& adjMatrix);
+  Graph(const std::vector<std::vector<int>>& adjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels);
 
   Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix);
+  Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels);
 
-  std::vector<EdgeID> getEdges(VertexID endVertex, VertexID startVertex); // returns a list of all edges between two vertices.
+ std::vector<EdgeID> getEdges(VertexID endVertex, VertexID startVertex); // returns a list of all edges between two vertices.
 
   VertexID getStartVertex(EdgeID edgeID) const { return edgeList[edgeID].startVertexID; }
   VertexID getEndVertex(EdgeID edgeID) const { return edgeList[edgeID].endVertexID; }
 
+  std::string printEdgeLabel(Path& path)
+  {
+    std::string output = "";
+    int i = 0;
+    for(EdgeID itr: path.getPathList()) {
+      if(i+1 == path.getPathList().size()){
+        output.append(edgeList[itr].edgeLabel);
+      } else {
+        output.append(edgeList[itr].edgeLabel + ", ");
+      }
+      i++;
+    }
+    return output;
+  }
 };

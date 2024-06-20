@@ -4,6 +4,7 @@
 
 PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
 {
+  // TODO Write a check for if either path is just a vertex, return whichever is not if compatible.
   // I think a placeholder variable is easiest here
   //Path newPath = Path();
   if (!(path1.mStartVertex == -1 || path2.mStartVertex == -1) && path1.mEndVertex == path2.mStartVertex){
@@ -13,12 +14,10 @@ PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
     // otherwise, just set the ID
     auto lookup = mPathTable.mReversePathDictionary.find(newPath);
     if(lookup == mPathTable.mReversePathDictionary.end()) {
-      std::cout << "New path: " << newPath.printID() << std::endl;
-      PathHash hash;
-      std::cout << "New path hash: " << hash(newPath) << std::endl;
       newPath.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
-      mPathTable.mPathDictionary.push_back(newPath);                     // newPath is new, add it to our dictionary
-      mPathTable.mReversePathDictionary.insert({newPath,newPath.mPathID});   // also add it to the reverse dictionary
+      mPathTable.addToTable(newPath);                                    // add newPath to both of our path tables
+      //mPathTable.mPathDictionary.push_back(newPath);                     // newPath is new, add it to our dictionary
+      //mPathTable.mReversePathDictionary.insert({newPath,newPath.mPathID});   // also add it to the reverse dictionary
       return newPath.mPathID;                                            // return it
     } else {
       return lookup->second; // it already exists, just return that.
