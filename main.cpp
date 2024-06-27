@@ -14,20 +14,18 @@ int main(int argc, char** argv)
              << std::endl;
 
    //Graph myGraph({ std::vector<int> {1} });
-   Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
+   //Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
 
-   for(auto itr: myGraph.edgeList){
-      std::cout << itr.edgeLabel << std::endl;
-   }
+   Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
 
    PathAlgebra myPathAlgebra(myGraph, myField);
 
    Path myPath(0,0,{0,0,0,0,0});
-   Path myPath2(1,2,{1,2,3,4,5});
+   Path myPath2(1,2,{0,1,2,3,4});
 
    myPathAlgebra.addToPathTable(myPath);
 
-   std::cout << myPath.printEdgeID() << std::endl;
+   std::cout << myGraph.printEdgeID(myPath) << std::endl;
    std::cout << myGraph.printEdgeLabel(myPath) << std::endl;
    std::cout << myGraph.printEdgeLabel(myPath2) << std::endl;
 

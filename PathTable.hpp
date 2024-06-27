@@ -16,6 +16,7 @@ public:
   }
 
   void addToTable(Path& path);
+  void findOrAdd(Path& path);
 
 private:
   std::vector<Path> mPathDictionary;

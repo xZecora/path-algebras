@@ -181,6 +181,19 @@ Graph::Graph(const std::vector<std::vector<int>>& adjMatrix)
   buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);
 }
 
+Graph::Graph(const std::vector<std::vector<int>>& adjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels)
+{
+  int numEdges = 0;
+  for(int i = 0; i < adjMatrix.size(); ++i)
+    for(int j = 0; j < adjMatrix[i].size(); ++j)
+      numEdges += adjMatrix[i][j];
+
+  if (numEdges != edgeLabels.size())
+    exit(0);
+
+  buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);
+}
+
 // sparse adjacency matrix constructor (TODO: fix?)
 Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix)
 {
@@ -195,6 +208,26 @@ Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatri
       numEdges += adjMatrix[i][j];
 
   std::vector<std::string> edgeLabels = buildEdgeLabels(numEdges);
+
+  buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);  
+}
+
+Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels)
+{
+  // adjMatrix is the dense representation of the sparse input
+  std::vector<std::vector<int>> adjMatrix = sparseToDense(sparseAdjMatrix);
+  
+  //std::vector<std::string> vertexLabels = buildVertexLabels(adjMatrix.size());
+
+  int numEdges = 0;
+  for(int i = 0; i < adjMatrix.size(); ++i)
+    for(int j = 0; j < adjMatrix[i].size(); ++j)
+      numEdges += adjMatrix[i][j];
+
+  if (numEdges != edgeLabels.size())
+    exit(0);
+
+  //std::vector<std::string> edgeLabels = buildEdgeLabels(numEdges);
 
   buildVerticesAndEdges(adjMatrix,vertexList,edgeList,vertexLabels,edgeLabels);  
 }

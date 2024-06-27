@@ -9,6 +9,7 @@ class Path
   friend class PathHash;
   friend class PathEqual;
   friend class PathAlgebra;
+  friend class PathTable;
   
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally

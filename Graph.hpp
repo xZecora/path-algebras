@@ -16,10 +16,8 @@ class Edge{
   friend class Graph;
 
 private:
-public://temp
   EdgeID edgeID;
   EdgeLabel edgeLabel;
-private:  //temp
   VertexID startVertexID;
   VertexID endVertexID;
   std::vector<int> edgeWeight; // Need to store this to reference elsewhere
@@ -65,5 +63,10 @@ public:
       i++;
     }
     return output;
+  }
+
+  std::string printEdgeID(Path& path)
+  {
+    return path.printEdgeID();
   }
 };
