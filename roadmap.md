@@ -10,18 +10,20 @@ General Roadmap
 
 - [X] Decide how to/implement storage of the adjacency matrix of the graph.
 
-- [ ] Get the constructor(s) for PathAlgebra working - in particular decide how to read in the adjacency matrix of a graph, store vertex labels, edge labels
+- [X] Get the constructor(s) for PathAlgebra working - in particular decide how to read in the adjacency matrix of a graph, store vertex labels, edge labels
 
-- [ ] Write the path multiplication code - should be several cases depending on whether the left/right path is a vertex or not.
+- [X] Write the path multiplication code - should be several cases depending on whether the left/right path is a vertex or not.
 
-- [ ] Refactor multiblyPaths into a part that does multiplication and one that checks if it already exists
+- [X] Refactor multiplyPaths into a part that does multiplication and one that checks if it already exists
 
-- [ ] Implement adding/looking up paths to the path table (think about when to actually add paths to the table)
+- [X] Implement adding/looking up paths to the path table (think about when to actually add paths to the table)
 
-- [ ] Write a version of path multiplication that performs the lookup as well.
+- [X] Write a version of path multiplication that performs the lookup as well.
 
 - [ ] Define function which creates a PAElement out of a path.
 
 - [ ] Define function which takes a list of indices and a list of coefficients and creates a PAElement
 
 - [ ] Implement arithmetic on PAElements (add, subtract, multiply)
+
+- [ ] Implement FLINT aritmetic for coefficients (integers mod n, n prime)

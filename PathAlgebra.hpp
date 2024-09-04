@@ -24,6 +24,11 @@ public:
     this->mPathTable.addToTable(path);
   }
 
+  // add(PAElement f, PAElement g)
+  // subtract(PAElement f, PAElement g)
+  // multiply(PAElement f, PAElement g)
+  // exponent(PAElement f, long n)
+
 private:
   Graph& mGraph;
   Field& mField;
