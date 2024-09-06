@@ -4,6 +4,7 @@
 #include "Path.hpp"
 #include "Graph.hpp"
 #include "Field.hpp"
+#include "PAElement.hpp"
 
 #include <vector>
 
@@ -24,10 +25,12 @@ public:
     this->mPathTable.addToTable(path);
   }
 
-  // add(PAElement f, PAElement g)
-  // subtract(PAElement f, PAElement g)
-  // multiply(PAElement f, PAElement g)
-  // exponent(PAElement f, long n)
+  void add(PAElement &result, const PAElement &f, const PAElement &g);
+  void subtract(PAElement &result, const PAElement &f, const PAElement &g);
+  void negate(PAElement &result, const PAElement& f);
+  void negate(PAElement &f);
+  void multiply(PAElement &result, const PAElement &f, const PAElement &g);
+  void exponent(PAElement &result, const PAElement &f, long n);
 
 private:
   Graph& mGraph;

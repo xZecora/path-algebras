@@ -47,6 +47,7 @@ public:
 
    FieldElement invert(FieldElement a)
    {
+      // TODO: Fix this abomination 
       if (a.mElement == 0) { std::cout << "Attempting to divide by zero." << std::endl; }
       if (mCharacteristic == 2) return a;
       // any short-circuits?

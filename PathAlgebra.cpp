@@ -47,3 +47,10 @@ PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
     return PathID(0); // ID of the empty path.
   }
 }
+
+void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {}
+void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {}
+void PathAlgebra::negate(PAElement &result, const PAElement& f) {}
+void PathAlgebra::negate(PAElement &f) {}
+void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {}
+void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {}

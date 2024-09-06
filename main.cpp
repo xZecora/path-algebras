@@ -2,6 +2,7 @@
 #include "Field.hpp"
 #include "Graph.hpp"
 #include "PathAlgebra.hpp"
+#include "PAElement.hpp"
 
 int main(int argc, char** argv)
 {
@@ -22,6 +23,10 @@ int main(int argc, char** argv)
 
    Path myPath(0,0,{0,0,0,0,0});
    Path myPath2(1,2,{0,1,2,3,4});
+   Path myPath3(0,2,{0,1,2,3,4});
+   // myGraph.isValid(myPath);  // should (be implemented) and return true
+   // myGraph.isValid(myPath2);  // should (be implemented) and return false
+   // myGraph.isValid(myPath3);  // should (be implemented) and return true
 
    myPathAlgebra.addToPathTable(myPath);
 
@@ -31,9 +36,19 @@ int main(int argc, char** argv)
 
    PathID multPath1 = myPathAlgebra.multiplyPaths(myPath,myPath);
    PathID multPath2 = myPathAlgebra.multiplyPaths(myPath,myPath);
+   PathID multPath3 = myPathAlgebra.multiplyPaths(myPath,myPath3);
 
    std::cout << "PathID1: " << multPath1 << std::endl;
    std::cout << "PathID2: " << multPath2 << std::endl;
+   std::cout << "PathID3: " << multPath3 << std::endl;
+
+   PAElement monom1(multPath1);
+   PAElement monom2(multPath1, FieldElement { 2 });
+   PAElement monom3(multPath3);
+
+   PAElement mySum1, mySum2;
+   myPathAlgebra.add(mySum1,monom1,monom2);
+   myPathAlgebra.add(mySum2,monom1,monom3);
 
    return 0;
 }

@@ -20,9 +20,11 @@ General Roadmap
 
 - [X] Write a version of path multiplication that performs the lookup as well.
 
-- [ ] Define function which creates a PAElement out of a path.
+- [X] Define function which creates a PAElement out of a path.
 
-- [ ] Define function which takes a list of indices and a list of coefficients and creates a PAElement
+- [X] Define function which takes a list of indices and a list of coefficients and creates a PAElement
+
+- [ ] Printing function for PAElements
 
 - [ ] Implement arithmetic on PAElements (add, subtract, multiply)
 

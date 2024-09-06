@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Field.hpp"
 #include "Path.hpp"
 #include "util.hpp"
@@ -6,7 +8,22 @@ class PAElement
 {
 public:
 
-  PAElement(std::vector<PathID>
+  PAElement(std::vector<PathID> &paths,
+	    std::vector<FieldElement> &coeffs);
+
+  PAElement(PathID path, FieldElement coeff) : 
+    mPaths({path}),
+    mCoeffs({coeff})
+  {
+  }
+
+  PAElement(PathID path) :
+    mPaths({path}),
+    mCoeffs({FieldElement { 1 }})
+  {
+  }
+
+  PAElement() = default;
 
   // iterator for the PAElement type so that something like the following should work:
   // for f a PAElement
@@ -23,12 +40,12 @@ public:
 
   PAElementIterator begin();
 
-  ConstPAElementIterator cbegin();
+  // ConstPAElementIterator cbegin();
 
 private:
   std::vector<PathID> mPaths;
   std::vector<FieldElement> mCoeffs;
-}
+};
 
 // define (where necessary) pre/postfix ++ operators for Iterators
 
