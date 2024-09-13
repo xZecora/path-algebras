@@ -19,7 +19,11 @@ int main(int argc, char** argv)
 
    Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
 
-   PathAlgebra myPathAlgebra(myGraph, myField);
+   std::vector<WeightVector> weights = {{1},{2},{3}};
+
+   PathOrder myPathOrder(weights);
+
+   PathAlgebra myPathAlgebra(myGraph, myField, myPathOrder);
 
    Path myPath(0,0,{0,0,0,0,0});
    Path myPath2(1,2,{0,1,2,3,4});

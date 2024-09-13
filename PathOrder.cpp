@@ -2,15 +2,22 @@
 #include "PathOrder.hpp"
 
 WeightVector PathOrder::pathWeight(Path path1) const {
-  WeightVector weightVector = {};
-  int size = path1.getEdgeList().size();
-  /*
-     This does not work, this simply gets the id for each edge
-     and adds it to the list. Need to implement accessing PathTables
-     dictionary.
-  */
+  WeightVector weightVector; // weight of the path
+  // fill out weight vectors to be right size
+  weightVector.resize(mWeightLength);
+  std::fill(weightVector.begin(), weightVector.end(), 0);
+
+  // get and store edge list from our path
+  const std::vector<EdgeID>& edgeList = path1.getEdgeList();
+  int size = edgeList.size();
+
+  // iterating over the edge list of the path
   for(int i = 0; i < size; i++){
-    weightVector.push_back(path1.getEdgeList()[i]);
+    // TODO
+    //assert(mEdgeWeights[i].size() == mWeightLength);
+    for(int j = 0; j < mWeightLength; j++) {
+      weightVector[j] += mEdgeWeights[i][j];
+    }
   }
   return weightVector;
 }
@@ -65,7 +72,7 @@ Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const
 
 Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
 {
-   if (hasWeights)
+   if (mHasWeights)
    {
       return weightCompare(path1, path2);
    }

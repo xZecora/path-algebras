@@ -1,9 +1,9 @@
 # Just uncomment whichever it is on your machine
-#CPP=g++
-CPP=/opt/homebrew/bin/g++-13
+CPP=g++
+#CPP=/opt/homebrew/bin/g++-13
 CPPFLAGS=-std=c++20 -I.
 
-main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o
+main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o
 	$(CPP) $(CPPFLAGS) -o main main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o
 
 main.o : main.cpp
@@ -26,6 +26,9 @@ PathTable.o : PathTable.cpp
 
 PAElement.o : PAElement.cpp
 	$(CPP) $(CPPFLAGS) -c PAElement.cpp
+
+PathOrder.o : PathOrder.cpp
+	$(CPP) $(CPPFLAGS) -c PathOrder.cpp
 
 clean :
 	rm main Field.o Graph.o main.o PathAlgebra.o Path.o PathTable.o PAElement.o

@@ -48,9 +48,61 @@ PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
   }
 }
 
-void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {}
-void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {}
-void PathAlgebra::negate(PAElement &result, const PAElement& f) {}
-void PathAlgebra::negate(PAElement &f) {}
-void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {}
-void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {}
+void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {
+  size_t fsize = f.polynomial.size();
+  size_t gsize = g.polynomial.size();
+
+  // this should compare path weights at each step and add which is heavier
+  auto fit = f.polynomial.begin();
+  auto git = g.polynomial.begin();
+  while (fit != f.polynomial.end() && git != g.polynomial.end()) {
+    // if f heavier, add f
+    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::GT){
+      result.polynomial.push_back({fit->first,fit->second});
+      ++fit;
+    }
+    // if g heavier, add g
+    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::LT){
+      result.polynomial.push_back({git->first,git->second});
+      ++git;
+    }
+    // if f heavier, add f
+    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::EQ){
+      result.polynomial.push_back({mField.add(fit->first,git->first) ,fit->second});
+      ++fit;
+      ++git;
+    }
+  }
+
+  // add everything from f not already used 
+  while (fit != f.polynomial.end()) {
+    result.polynomial.push_back({fit->first,fit->second});
+    ++fit;
+  }
+  // add everything from g not already used 
+  while (git != g.polynomial.end()) {
+    result.polynomial.push_back({git->first,git->second});
+    ++git;
+  }
+}
+
+void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {
+
+}
+
+void PathAlgebra::negate(PAElement &result, const PAElement& f) {
+
+}
+
+void PathAlgebra::negate(PAElement &f) {
+
+}
+
+void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {
+
+}
+
+void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {
+
+}
+

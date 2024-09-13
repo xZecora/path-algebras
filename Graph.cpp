@@ -118,6 +118,8 @@ Vertex::Vertex(VertexID id, std::string label)
 
 // Edge class members
 
+//obsolete
+/*
 Edge::Edge(EdgeID id, EdgeLabel label, VertexID start, VertexID end, std::vector<int> weight)
    : edgeID(id),
      edgeLabel(label),
@@ -126,19 +128,23 @@ Edge::Edge(EdgeID id, EdgeLabel label, VertexID start, VertexID end, std::vector
      edgeWeight(weight)
 {
 }
+*/
 
 Edge::Edge(EdgeID id, EdgeLabel label, VertexID start, VertexID end)
    : edgeID(id),
      edgeLabel(label),
      startVertexID(start),
-     endVertexID(end),
-     edgeWeight({})
+     endVertexID(end)
+//     edgeWeight({})
 {
 }
 
+// Obsolete
+/*
 std::vector<int> Edge::getWeight() {
   return edgeWeight;
 }
+*/
 
 // Graph class members
 

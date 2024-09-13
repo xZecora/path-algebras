@@ -20,13 +20,13 @@ private:
   EdgeLabel edgeLabel;
   VertexID startVertexID;
   VertexID endVertexID;
-  std::vector<int> edgeWeight; // Need to store this to reference elsewhere
+  //std::vector<int> edgeWeight; // Need to store this to reference elsewhere
 
   public: 
-  Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID, std::vector<int> weight);
+  //Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID, std::vector<int> weight);
   Edge(EdgeID id, EdgeLabel label, VertexID startVertexID, VertexID endVertexID);
 
-  std::vector<int> getWeight(); // need to access weight nonlocally
+  //std::vector<int> getWeight(); // need to access weight nonlocally
 };
 
 class Graph{
@@ -45,7 +45,7 @@ public:
   Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix);
   Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels);
 
- std::vector<EdgeID> getEdges(VertexID endVertex, VertexID startVertex); // returns a list of all edges between two vertices.
+  std::vector<EdgeID> getEdges(VertexID endVertex, VertexID startVertex); // returns a list of all edges between two vertices.
 
   VertexID getStartVertex(EdgeID edgeID) const { return edgeList[edgeID].startVertexID; }
   VertexID getEndVertex(EdgeID edgeID) const { return edgeList[edgeID].endVertexID; }

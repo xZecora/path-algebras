@@ -2,6 +2,7 @@
 
 #include "PathTable.hpp"
 #include "Path.hpp"
+#include "PathOrder.hpp"
 #include "Graph.hpp"
 #include "Field.hpp"
 #include "PAElement.hpp"
@@ -13,10 +14,15 @@ class PathAlgebra
 public:
   PathAlgebra(Graph& graph, Field& field) :
     mGraph(graph),
-    mField(field)
-  {
-    mPathTable = PathTable();
-  }
+    mField(field),
+    mPathTable(),
+    mPathOrder() {};
+
+  PathAlgebra(Graph& graph, Field& field, PathOrder& pathOrder) :
+    mGraph(graph),
+    mField(field),
+    mPathTable(),
+    mPathOrder(pathOrder) {};
 
   PathID multiplyPaths(Path path1, Path path2);
 
@@ -36,4 +42,5 @@ private:
   Graph& mGraph;
   Field& mField;
   PathTable mPathTable;
+  PathOrder mPathOrder;
 };
