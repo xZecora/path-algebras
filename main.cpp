@@ -23,6 +23,8 @@ int main(int argc, char** argv)
 
    PathOrder myPathOrder(weights);
 
+   std::cout << std::endl << std::flush;
+
    PathAlgebra myPathAlgebra(myGraph, myField, myPathOrder);
 
    Path myPath(0,0,{0,0,0,0,0});
@@ -50,6 +52,7 @@ int main(int argc, char** argv)
    PAElement monom2(multPath1, FieldElement { 2 });
    PAElement monom3(multPath3);
 
+   std::cout << "Entering sum code." << std::endl;
    PAElement mySum1, mySum2;
    myPathAlgebra.add(mySum1,monom1,monom2);
    myPathAlgebra.add(mySum2,monom1,monom3);

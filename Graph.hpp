@@ -50,7 +50,7 @@ public:
   VertexID getStartVertex(EdgeID edgeID) const { return edgeList[edgeID].startVertexID; }
   VertexID getEndVertex(EdgeID edgeID) const { return edgeList[edgeID].endVertexID; }
 
-  std::string printEdgeLabel(Path& path)
+  std::string printEdgeLabel(const Path& path) const
   {
     std::string output = "";
     int i = 0;
@@ -65,7 +65,7 @@ public:
     return output;
   }
 
-  std::string printEdgeID(Path& path)
+  std::string printEdgeID(const Path& path) const
   {
     return path.printEdgeID();
   }

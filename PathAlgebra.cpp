@@ -49,25 +49,35 @@ PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
 }
 
 void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {
-  size_t fsize = f.polynomial.size();
-  size_t gsize = g.polynomial.size();
 
   // this should compare path weights at each step and add which is heavier
   auto fit = f.polynomial.begin();
   auto git = g.polynomial.begin();
+
   while (fit != f.polynomial.end() && git != g.polynomial.end()) {
-    // if f heavier, add f
-    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::GT){
+    std::cout << "Getting paths." << std::endl;
+    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->second)];
+    const Path& gPath = this->mPathTable.mPathDictionary[int(git->second)];
+
+    std::cout << mGraph.printEdgeLabel(fPath) << std::endl;
+    std::cout << mGraph.printEdgeLabel(gPath) << std::endl;
+
+    std::cout << "About to compare paths." << std::endl;
+    // if fPath heavier, add from f
+    if (mPathOrder.comparePaths(fPath,gPath) == Compare::GT){
+      std::cout << "f heavier" << std::endl;
       result.polynomial.push_back({fit->first,fit->second});
       ++fit;
     }
-    // if g heavier, add g
-    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::LT){
+    // if gPath heavier, add from g
+    if (mPathOrder.comparePaths(fPath,gPath) == Compare::LT){
+      std::cout << "g heavier" << std::endl;
       result.polynomial.push_back({git->first,git->second});
       ++git;
     }
-    // if f heavier, add f
-    if (mPathOrder.comparePaths(this->mPathTable.mPathDictionary[int(fit->second)], this->mPathTable.mPathDictionary[int(git->second)]) == Compare::EQ){
+    // if fPath = gPath then add and increment both
+    if (mPathOrder.comparePaths(fPath,gPath) == Compare::EQ){
+      std::cout << "f and g same" << std::endl;
       result.polynomial.push_back({mField.add(fit->first,git->first) ,fit->second});
       ++fit;
       ++git;

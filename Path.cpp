@@ -18,9 +18,9 @@ std::string Path::printLabels()
 }
 */
 
-std::string Path::printEdgeLabels() { return this->printEdgeID(); }
+std::string Path::printEdgeLabels() const { return this->printEdgeID(); }
 
-std::string Path::printEdgeID()
+std::string Path::printEdgeID() const
 {
   std::string output = "";
   int i = 0;

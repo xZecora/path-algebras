@@ -14,8 +14,8 @@ class Path
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
-  std::string printEdgeLabels();
-  std::string printEdgeID();
+  std::string printEdgeLabels() const;
+  std::string printEdgeID() const;
 
   PathID getID();
 
@@ -55,7 +55,7 @@ public:
   {
   }
 
-  const std::vector<EdgeID>& getPathList()
+  const std::vector<EdgeID>& getPathList() const
   {
     return this->mPath;
   }

@@ -1,11 +1,20 @@
 #include <numeric>
 #include "PathOrder.hpp"
 
-WeightVector PathOrder::pathWeight(Path path1) const {
+WeightVector PathOrder::pathWeight(const Path& path1) const {
   WeightVector weightVector; // weight of the path
   // fill out weight vectors to be right size
   weightVector.resize(mWeightLength);
   std::fill(weightVector.begin(), weightVector.end(), 0);
+
+  std::cout << "Weight Length: " << mWeightLength << std::endl;
+  for (auto i : weightVector) { std::cout << i << " "; }
+
+  std::cout << std::endl << std::flush;
+  
+  for (auto wt : mEdgeWeights) {
+    for (auto i : wt) { std::cout << i << " "; }
+  }
 
   // get and store edge list from our path
   const std::vector<EdgeID>& edgeList = path1.getEdgeList();
@@ -74,6 +83,7 @@ Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
 {
    if (mHasWeights)
    {
+      std::cout << "Has weights" << std::endl;
       return weightCompare(path1, path2);
    }
    return lengthLexCompare(path1,path2);
