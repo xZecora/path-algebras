@@ -19,7 +19,7 @@ int main(int argc, char** argv)
 
    Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
 
-   std::vector<WeightVector> weights = {{1},{2},{3}};
+   std::vector<WeightVector> weights = {{1},{2},{3},{2},{1}};
 
    PathOrder myPathOrder(weights);
 
@@ -28,7 +28,7 @@ int main(int argc, char** argv)
    PathAlgebra myPathAlgebra(myGraph, myField, myPathOrder);
 
    Path myPath(0,0,{0,0,0,0,0});
-   Path myPath2(1,2,{0,1,2,3,4});
+   Path myPath2(1,2,{0,1,2,3,4});   // not a valid path... should we error?
    Path myPath3(0,2,{0,1,2,3,4});
    // myGraph.isValid(myPath);  // should (be implemented) and return true
    // myGraph.isValid(myPath2);  // should (be implemented) and return false
@@ -56,6 +56,8 @@ int main(int argc, char** argv)
    PAElement mySum1, mySum2;
    myPathAlgebra.add(mySum1,monom1,monom2);
    myPathAlgebra.add(mySum2,monom1,monom3);
+
+   std::cout << "Number of terms in mySum2: " << mySum2.numTerms() << std::endl;
 
    return 0;
 }

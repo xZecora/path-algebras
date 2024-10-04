@@ -7,27 +7,31 @@ WeightVector PathOrder::pathWeight(const Path& path1) const {
   weightVector.resize(mWeightLength);
   std::fill(weightVector.begin(), weightVector.end(), 0);
 
-  std::cout << "Weight Length: " << mWeightLength << std::endl;
-  for (auto i : weightVector) { std::cout << i << " "; }
+  // std::cout << "Weight Length: " << mWeightLength << std::endl;
+  // for (auto i : weightVector) { std::cout << i << " "; }
 
-  std::cout << std::endl << std::flush;
+  // std::cout << std::endl << std::flush;
   
-  for (auto wt : mEdgeWeights) {
-    for (auto i : wt) { std::cout << i << " "; }
-  }
+  // std::cout << "mEdgeWeights size: " << mEdgeWeights.size() << std::endl;
+
+  // for (auto wt : mEdgeWeights) {
+  //   for (auto i : wt) { std::cout << i << " "; }
+  //   std::cout << std::endl << std::flush;
+  // }
 
   // get and store edge list from our path
   const std::vector<EdgeID>& edgeList = path1.getEdgeList();
   int size = edgeList.size();
 
   // iterating over the edge list of the path
-  for(int i = 0; i < size; i++){
+  for(int i = 0; i < size; ++i){
     // TODO
     //assert(mEdgeWeights[i].size() == mWeightLength);
-    for(int j = 0; j < mWeightLength; j++) {
-      weightVector[j] += mEdgeWeights[i][j];
+    for(int j = 0; j < mWeightLength; ++j) {
+      weightVector[j] += mEdgeWeights[edgeList[i]][j];
     }
   }
+
   return weightVector;
 }
 
@@ -43,9 +47,10 @@ WeightVector PathOrder::pathWeight(const Path& path1) const {
 Compare PathOrder::weightCompare(const Path& path1, const Path& path2) const
 {
   WeightVector weightVector1 = pathWeight(path1);
+
   WeightVector weightVector2 = pathWeight(path2);
 
-  for(int i = 0; i < weightVector1.size(); i++)
+  for(int i = 0; i < weightVector1.size(); ++i)
   {
     if (weightVector1[i] > weightVector2[i])
       return Compare::GT;
@@ -83,7 +88,6 @@ Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
 {
    if (mHasWeights)
    {
-      std::cout << "Has weights" << std::endl;
       return weightCompare(path1, path2);
    }
    return lengthLexCompare(path1,path2);

@@ -55,6 +55,8 @@ public:
   // ConstPAElementIterator cbegin();
   */
 
+  long numTerms() { return polynomial.size(); }
+
 private:
   // read TODO on l61
   //std::vector<PathID> mPaths;

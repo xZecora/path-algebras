@@ -64,23 +64,25 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
 
     std::cout << "About to compare paths." << std::endl;
     // if fPath heavier, add from f
-    if (mPathOrder.comparePaths(fPath,gPath) == Compare::GT){
-      std::cout << "f heavier" << std::endl;
-      result.polynomial.push_back({fit->first,fit->second});
-      ++fit;
-    }
-    // if gPath heavier, add from g
-    if (mPathOrder.comparePaths(fPath,gPath) == Compare::LT){
-      std::cout << "g heavier" << std::endl;
-      result.polynomial.push_back({git->first,git->second});
-      ++git;
-    }
-    // if fPath = gPath then add and increment both
-    if (mPathOrder.comparePaths(fPath,gPath) == Compare::EQ){
-      std::cout << "f and g same" << std::endl;
-      result.polynomial.push_back({mField.add(fit->first,git->first) ,fit->second});
-      ++fit;
-      ++git;
+    Compare comp = mPathOrder.comparePaths(fPath,gPath);
+
+    switch (comp) {
+      case Compare::GT:
+	std::cout << "f heavier" << std::endl;
+	result.polynomial.push_back({fit->first,fit->second});
+	++fit;
+	break;
+      case Compare::LT:
+	std::cout << "g heavier" << std::endl;
+	result.polynomial.push_back({git->first,git->second});
+	++git;
+	break;
+      case Compare::EQ:
+	std::cout << "f and g same" << std::endl;
+	result.polynomial.push_back({mField.add(fit->first,git->first) ,fit->second});
+	++fit;
+	++git;
+	break;
     }
   }
 
