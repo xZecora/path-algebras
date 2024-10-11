@@ -12,6 +12,13 @@ public:
    FieldElement(unsigned int element)
      : mElement(element) { }
 
+   bool isZero(){
+     if(mElement == 0)
+       return true;
+     return false;
+   }
+
+
 private:
   unsigned int mElement;
 };
@@ -52,6 +59,11 @@ public:
       if (mCharacteristic == 2) return a;
       // any short-circuits?
       return power(a,mCharacteristic - 2);
+   }
+
+   inline FieldElement negate(FieldElement a)
+   {
+     return this->subtract(FieldElement(0), a);
    }
 
    FieldElement power(FieldElement a, unsigned int pow);
