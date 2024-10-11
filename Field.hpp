@@ -9,6 +9,10 @@ class FieldElement
   friend std::ostream& operator<<(std::ostream& ostr, const FieldElement& f);
 
 public:
+   // it is the creator's responsibility to ensure
+   // that element is in the range 0 <= a < = p-1 where
+   // the characteristic of whatever field we are working in is p.
+   // the issue is we don't want FieldElement to know what p is for space issues.
    FieldElement(unsigned int element)
      : mElement(element) { }
 
@@ -54,7 +58,7 @@ public:
 
    FieldElement invert(FieldElement a)
    {
-      // TODO: Fix this abomination 
+      // TODO: Fix this abomination -- implement the Euclidean Algorithm...
       if (a.mElement == 0) { std::cout << "Attempting to divide by zero." << std::endl; }
       if (mCharacteristic == 2) return a;
       // any short-circuits?
@@ -63,7 +67,8 @@ public:
 
    inline FieldElement negate(FieldElement a)
    {
-     return this->subtract(FieldElement(0), a);
+     //return this->subtract(FieldElement(0), a);
+     return FieldElement(mCharacteristic - a.mElement);
    }
 
    FieldElement power(FieldElement a, unsigned int pow);

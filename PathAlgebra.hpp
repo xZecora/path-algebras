@@ -8,10 +8,12 @@
 #include "PAElement.hpp"
 
 #include <vector>
+#include <iostream>
 
 class PathAlgebra
 {
 public:
+  
   PathAlgebra(Graph& graph, Field& field) :
     mGraph(graph),
     mField(field),
@@ -37,6 +39,9 @@ public:
   void negate(PAElement &f);
   void multiply(PAElement &result, const PAElement &f, const PAElement &g);
   void exponent(PAElement &result, const PAElement &f, long n);
+
+  void printPAElementByLabel(std::ostream& ostr, const PAElement &f);
+  void printPAElementByPathID(std::ostream& ostr, const PAElement &f);
 
 private:
   Graph& mGraph;

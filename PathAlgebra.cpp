@@ -79,9 +79,9 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
 	      break;
       case Compare::EQ:
 	      std::cout << "f and g same" << std::endl;
-        FieldElement sum = mField.add(fit->first,git->first);
-        // if our sum is 0, then we dont want to add it and just want to move on.
-        if(!sum.isZero())
+              FieldElement sum = mField.add(fit->first,git->first);
+              // if our sum is 0, then we dont want to add it and just want to move on.
+              if(!sum.isZero())
 	        result.polynomial.push_back({sum ,fit->second});
 	      ++fit;
 	      ++git;
@@ -99,6 +99,18 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
     result.polynomial.push_back({git->first,git->second});
     ++git;
   }
+}
+
+void PathAlgebra::add(PAElement &result, const std::vector<PAElement> &vec) {
+  // could make this heap-based, but for now:
+  PAElement accum;
+  for (auto f : vec)
+  {
+    PAElement temp;
+    this->add(temp,f,accum);
+    accum = temp;  // TODO: fast way of moving memory from one to another
+  }
+  result = accum;  // TODO: also use memory move
 }
 
 void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {
@@ -122,7 +134,7 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
     switch (comp) {
       case Compare::GT:
 	      std::cout << "f heavier" << std::endl;
-	      result.polynomial.push_back({mField.negate(fit->first),fit->second});
+	      result.polynomial.push_back({fit->first,fit->second});
 	      ++fit;
 	      break;
       case Compare::LT:
@@ -132,9 +144,9 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
 	      break;
       case Compare::EQ:
 	      std::cout << "f and g same" << std::endl;
-        FieldElement diff = mField.subtract(fit->first,git->first);
-        // if our sum is 0, then we dont want to add it and just want to move on.
-        if(!diff.isZero())
+              FieldElement diff = mField.subtract(fit->first,git->first);
+              // if our sum is 0, then we dont want to add it and just want to move on.
+              if(!diff.isZero())
 	        result.polynomial.push_back({diff ,fit->second});
 	      ++fit;
 	      ++git;
@@ -144,7 +156,7 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
 
   // add everything from f not already used 
   while (fit != f.polynomial.end()) {
-	  result.polynomial.push_back({mField.negate(fit->first),fit->second});
+	  result.polynomial.push_back({fit->first,fit->second});
     ++fit;
   }
   // add everything from g not already used 
@@ -155,24 +167,61 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
 }
 
 void PathAlgebra::negate(PAElement &result, const PAElement &f) {
-  auto fit = f.polynomial.begin();
-
-  while (fit != f.polynomial.end())
-    result.polynomial.push_back({mField.negate(fit->first),fit->second});
+  for (auto t : f.polynomial)
+    result.polynomial.push_back({mField.negate(t.first),t.second});
 }
 
 void PathAlgebra::negate(PAElement &f) {
-  auto fit = f.polynomial.begin();
-  
-  while (fit != f.polynomial.end())
-    fit->first = mField.negate(fit->first);
+  for (auto t : f.polynomial)
+     t.first = mField.negate(t.first);
 }
 
 void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {
 
+  // make a function that takes a FieldElement, Path, PAElement
+  // and scales the PAelement by FieldElement and Path
+  
+  // for each term c*(path) in f, compute c*(path)*g using previous function
+  // put these in a std::vector<PAElement>
+  // use the sum code above to add them up, this is f*g.
 }
 
 void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {
 
 }
 
+void PathAlgebra::printPAElementByLabel(std::ostream& ostr, const PAElement &f)
+{
+   size_t numTerms = f.polynomial.size();
+   if (numTerms == 0)
+   {
+      ostr << "0";
+      return;
+   }
+   size_t thisTerm = 1;
+   for (auto t : f.polynomial)
+   {
+     std::string out = mGraph.printEdgeLabel(mPathTable.mPathDictionary[t.second]);
+     ostr << t.first << "*" << out;
+     if (thisTerm != numTerms) ostr << " + ";
+     ++thisTerm;
+   }
+}
+
+void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
+{
+   size_t numTerms = f.polynomial.size();
+   if (numTerms == 0)
+   {
+      ostr << "0";
+      return;
+   }
+   size_t thisTerm = 1;
+   for (auto t : f.polynomial)
+   {
+     std::string out = mGraph.printEdgeID(mPathTable.mPathDictionary[t.second]);
+     ostr << t.first << "*" << "[" << out << "]";
+     if (thisTerm != numTerms) ostr << " + ";
+     ++thisTerm;
+   }
+}

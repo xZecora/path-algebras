@@ -59,5 +59,15 @@ int main(int argc, char** argv)
 
    std::cout << "Number of terms in mySum2: " << mySum2.numTerms() << std::endl;
 
+   myPathAlgebra.printPAElementByLabel(std::cout, mySum1);
+   std::cout << std::endl;
+   myPathAlgebra.printPAElementByLabel(std::cout, mySum2);
+   std::cout << std::endl;
+
+   PAElement mySum3;
+   myPathAlgebra.subtract(mySum3, mySum1, mySum1);
+   myPathAlgebra.printPAElementByLabel(std::cout, mySum3);
+   std::cout << std::endl << std::flush;
+
    return 0;
 }
