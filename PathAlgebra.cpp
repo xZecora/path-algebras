@@ -2,7 +2,7 @@
 #include "util.hpp"
 //#include <algorithm>
 
-PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
+PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
 {
   if (path1.mIsVertex)
   {
@@ -46,6 +46,21 @@ PathID PathAlgebra::multiplyPaths(Path path1, Path path2)
   } else {
     return PathID(0); // ID of the empty path.
   }
+}
+
+PathID PathAlgebra::multiplyPaths(PathID path1, PathID path2)
+{
+  return multiplyPaths(mPathTable.mPathDictionary[path1],mPathTable.mPathDictionary[path2]);
+}
+
+PathID PathAlgebra::multiplyPaths(const Path& path1, PathID path2)
+{
+  return multiplyPaths(path1,mPathTable.mPathDictionary[path2]);
+}
+
+PathID PathAlgebra::multiplyPaths(PathID path1, const Path& path2)
+{
+  return multiplyPaths(mPathTable.mPathDictionary[path1],path2);
 }
 
 void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {
@@ -101,17 +116,19 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
   }
 }
 
+
 void PathAlgebra::add(PAElement &result, const std::vector<PAElement> &vec) {
   // could make this heap-based, but for now:
   PAElement accum;
   for (auto f : vec)
   {
     PAElement temp;
-    this->add(temp,f,accum);
+    add(temp,f,accum);
     accum = temp;  // TODO: fast way of moving memory from one to another
   }
   result = accum;  // TODO: also use memory move
 }
+
 
 void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {
 
@@ -178,12 +195,85 @@ void PathAlgebra::negate(PAElement &f) {
 
 void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {
 
-  // make a function that takes a FieldElement, Path, PAElement
-  // and scales the PAelement by FieldElement and Path
+  PAElement result;
+  std::vector<PAElement> tempVec;
+
+  // TODO: fill tempVec with left/right multiples of f/g depending on which one is shorter
+
+  add(result, tempVec);
+}
+
+void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const FieldElement &c, const PAElement &f)
+{
+  // this function multiplies f by cp on the left.
+  // this function assumes result is empty before this call.
+  for (const auto &t : f.polynomial)
+  {
+    PathID tempPathID = multiplyPaths(p,t.second);
+    if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+    FieldElement tempCoeff = mField.multiply(c,t.first);
+    result.polynomial.push_back({tempCoeff, tempPathID});
+  } 
+}
+
+void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const PAElement &f)
+{
+  leftMultiply(result, p, FieldElement {1}, f);
+}
+
+void PathAlgebra::leftMultiply(PAElement &result, const PathID &p, const FieldElement &c, const PAElement &f)
+{
+  // this function assumes that p is a valid PathID
+  // assert(p.getID() != -1);
+  for (const auto &t : f.polynomial)
+  {
+    PathID tempPathID = multiplyPaths(p,t.second);
+    if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+    FieldElement tempCoeff = mField.multiply(c,t.first);
+    result.polynomial.push_back({tempCoeff, tempPathID});
+  } 
+}  
   
-  // for each term c*(path) in f, compute c*(path)*g using previous function
-  // put these in a std::vector<PAElement>
-  // use the sum code above to add them up, this is f*g.
+void PathAlgebra::leftMultiply(PAElement &result, const PathID &p, const PAElement &f)
+{
+  leftMultiply(result, p, FieldElement {1}, f);
+}
+
+void PathAlgebra::rightMultiply(PAElement &result, const PAElement &f, const Path &p, const FieldElement &c)
+{
+  // this function multiplies f by cp on the left.
+  // this function assumes result is empty before this call.
+  // this version allows for p to be a path with -1 PathID
+  for (const auto &t : f.polynomial)
+  {
+    PathID tempPathID = multiplyPaths(t.second,p);
+    if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+    FieldElement tempCoeff = mField.multiply(c,t.first);
+    result.polynomial.push_back({tempCoeff, tempPathID});
+  } 
+}
+
+void PathAlgebra::rightMultiply(PAElement &result, const PAElement& f, const Path &p)
+{
+  rightMultiply(result, f, p, FieldElement {1});
+}
+
+void PathAlgebra::rightMultiply(PAElement &result, const PAElement &f, const PathID &p, const FieldElement &c)
+{
+  // this function multiplies f by cp on the left.
+  // this function assumes result is empty before this call.
+  for (const auto &t : f.polynomial)
+  {
+    PathID tempPathID = multiplyPaths(t.second,p);
+    if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+    FieldElement tempCoeff = mField.multiply(c,t.first);
+    result.polynomial.push_back({tempCoeff, tempPathID});
+  } 
+}
+
+void PathAlgebra::rightMultiply(PAElement &result, const PAElement&f, const PathID &p)
+{
+  rightMultiply(result, f, p, FieldElement {1});
 }
 
 void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {

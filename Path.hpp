@@ -60,36 +60,6 @@ public:
     return this->mPath;
   }
 
-  /*
-  bool operator==(const Path& p) const
-  {
-    std::cout << "Checking Equality" << std::endl;
-    if(p.mPathID != -1 && this->mPathID != -1)
-    {
-      std::cout << "IDs Set" << std::endl;
-      return p.mPathID == this->mPathID;
-    }
-    // return false if they are not the same size
-    if(p.mPath.size() != this->mPath.size())
-    {
-      std::cout << "Different Sizes" << std::endl;
-      return false;
-    }
-    // iterate over the lists to check equality
-    int i = 0;
-    for(EdgeID id : this->mPath) {
-      if(id != p.mPath[i])
-      {
-        std::cout << "Different " << i << "th coordinate" << std::endl;
-        return false;
-      }
-      i++;
-    }
-    std::cout << "Equal Paths" << std::endl;
-    return true;
-  }
-  */
-
 private:
   bool mIsZero;
   bool mIsVertex;
