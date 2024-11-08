@@ -2,6 +2,9 @@
 #include "util.hpp"
 //#include <algorithm>
 
+#include <cassert>
+// to remove asserts, use compiler flag -DNDEBUG
+
 PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
 {
   if (path1.mIsVertex)
@@ -65,14 +68,16 @@ PathID PathAlgebra::multiplyPaths(PathID path1, const Path& path2)
 
 void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {
 
+  assert(result.polynomial.size() == 0);
+
   // this should compare path weights at each step and add which is heavier
   auto fit = f.polynomial.begin();
   auto git = g.polynomial.begin();
 
   while (fit != f.polynomial.end() && git != g.polynomial.end()) {
     std::cout << "Getting paths." << std::endl;
-    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->second)];
-    const Path& gPath = this->mPathTable.mPathDictionary[int(git->second)];
+    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
+    const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
     std::cout << mGraph.printEdgeLabel(fPath) << std::endl;
     std::cout << mGraph.printEdgeLabel(gPath) << std::endl;
@@ -84,20 +89,20 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
     switch (comp) {
       case Compare::GT:
 	      std::cout << "f heavier" << std::endl;
-	      result.polynomial.push_back({fit->first,fit->second});
+	      result.polynomial.push_back({fit->coeff,fit->pathID});
 	      ++fit;
 	      break;
       case Compare::LT:
 	      std::cout << "g heavier" << std::endl;
-	      result.polynomial.push_back({git->first,git->second});
+	      result.polynomial.push_back({git->coeff,git->pathID});
 	      ++git;
 	      break;
       case Compare::EQ:
 	      std::cout << "f and g same" << std::endl;
-              FieldElement sum = mField.add(fit->first,git->first);
+              FieldElement sum = mField.add(fit->coeff,git->coeff);
               // if our sum is 0, then we dont want to add it and just want to move on.
               if(!sum.isZero())
-	        result.polynomial.push_back({sum ,fit->second});
+	        result.polynomial.push_back({sum ,fit->pathID});
 	      ++fit;
 	      ++git;
 	      break;
@@ -106,12 +111,12 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
 
   // add everything from f not already used 
   while (fit != f.polynomial.end()) {
-    result.polynomial.push_back({fit->first,fit->second});
+    result.polynomial.push_back({fit->coeff,fit->pathID});
     ++fit;
   }
   // add everything from g not already used 
   while (git != g.polynomial.end()) {
-    result.polynomial.push_back({git->first,git->second});
+    result.polynomial.push_back({git->coeff,git->pathID});
     ++git;
   }
 }
@@ -119,6 +124,8 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
 
 void PathAlgebra::add(PAElement &result, const std::vector<PAElement> &vec) {
   // could make this heap-based, but for now:
+  assert(result.polynomial.size() == 0);
+
   PAElement accum;
   for (auto f : vec)
   {
@@ -132,14 +139,15 @@ void PathAlgebra::add(PAElement &result, const std::vector<PAElement> &vec) {
 
 void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {
 
+  assert(result.polynomial.size() == 0);
   // this should compare path weights at each step and add which is heavier
   auto fit = f.polynomial.begin();
   auto git = g.polynomial.begin();
 
   while (fit != f.polynomial.end() && git != g.polynomial.end()) {
     std::cout << "Getting paths." << std::endl;
-    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->second)];
-    const Path& gPath = this->mPathTable.mPathDictionary[int(git->second)];
+    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
+    const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
     std::cout << mGraph.printEdgeLabel(fPath) << std::endl;
     std::cout << mGraph.printEdgeLabel(gPath) << std::endl;
@@ -151,20 +159,20 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
     switch (comp) {
       case Compare::GT:
 	      std::cout << "f heavier" << std::endl;
-	      result.polynomial.push_back({fit->first,fit->second});
+	      result.polynomial.push_back({fit->coeff,fit->pathID});
 	      ++fit;
 	      break;
       case Compare::LT:
 	      std::cout << "g heavier" << std::endl;
-	      result.polynomial.push_back({mField.negate(git->first),git->second});
+	      result.polynomial.push_back({mField.negate(git->coeff),git->pathID});
 	      ++git;
 	      break;
       case Compare::EQ:
 	      std::cout << "f and g same" << std::endl;
-              FieldElement diff = mField.subtract(fit->first,git->first);
+              FieldElement diff = mField.subtract(fit->coeff,git->coeff);
               // if our sum is 0, then we dont want to add it and just want to move on.
               if(!diff.isZero())
-	        result.polynomial.push_back({diff ,fit->second});
+	        result.polynomial.push_back({diff ,fit->pathID});
 	      ++fit;
 	      ++git;
 	      break;
@@ -173,65 +181,94 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
 
   // add everything from f not already used 
   while (fit != f.polynomial.end()) {
-	  result.polynomial.push_back({fit->first,fit->second});
+	  result.polynomial.push_back({fit->coeff,fit->pathID});
     ++fit;
   }
   // add everything from g not already used 
   while (git != g.polynomial.end()) {
-	  result.polynomial.push_back({mField.negate(git->first),git->second});
+	  result.polynomial.push_back({mField.negate(git->coeff),git->pathID});
     ++git;
   }
 }
 
 void PathAlgebra::negate(PAElement &result, const PAElement &f) {
+  assert(result.polynomial.size() == 0);
   for (auto t : f.polynomial)
-    result.polynomial.push_back({mField.negate(t.first),t.second});
+    result.polynomial.push_back({mField.negate(t.coeff),t.pathID});
 }
 
 void PathAlgebra::negate(PAElement &f) {
   for (auto t : f.polynomial)
-     t.first = mField.negate(t.first);
+     t.coeff = mField.negate(t.coeff);
 }
 
-void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {
+void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g)
+{
+  assert(result.polynomial.size() == 0);
+  if (f.polynomial.size() < g.polynomial.size())
+     multiplyShortLeft(result, f, g);
+  else
+     multiplyShortRight(result, f, g);
+}
 
-  PAElement result;
-  std::vector<PAElement> tempVec;
+void PathAlgebra::multiplyShortLeft(PAElement &result, const PAElement &shortPoly, const PAElement &longPoly)
+{
+   assert(result.polynomial.size() == 0);
+   std::vector<PAElement> tempVec;
+   for (const auto &t : shortPoly.polynomial)
+   {
+      PAElement tempElt;
+      leftMultiply(tempElt, t.pathID, t.coeff, longPoly);
+      tempVec.push_back(tempElt);
+   }
+   add(result,tempVec);
+}
 
-  // TODO: fill tempVec with left/right multiples of f/g depending on which one is shorter
-
-  add(result, tempVec);
+void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
+{
+   assert(result.polynomial.size() == 0);
+   std::vector<PAElement> tempVec;
+   for (const auto &t : shortPoly.polynomial)
+   {
+      PAElement tempElt;
+      rightMultiply(tempElt, longPoly, t.pathID, t.coeff);
+      tempVec.push_back(tempElt);
+   }
+   add(result,tempVec);
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const FieldElement &c, const PAElement &f)
 {
+  assert(result.polynomial.size() == 0);
   // this function multiplies f by cp on the left.
   // this function assumes result is empty before this call.
   for (const auto &t : f.polynomial)
   {
-    PathID tempPathID = multiplyPaths(p,t.second);
+    PathID tempPathID = multiplyPaths(p,t.pathID);
     if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
-    FieldElement tempCoeff = mField.multiply(c,t.first);
+    FieldElement tempCoeff = mField.multiply(c,t.coeff);
     result.polynomial.push_back({tempCoeff, tempPathID});
   } 
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const PAElement &f)
 {
-  leftMultiply(result, p, FieldElement {1}, f);
+   assert(result.polynomial.size() == 0);
+   leftMultiply(result, p, FieldElement {1}, f);
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const PathID &p, const FieldElement &c, const PAElement &f)
 {
-  // this function assumes that p is a valid PathID
-  // assert(p.getID() != -1);
-  for (const auto &t : f.polynomial)
-  {
-    PathID tempPathID = multiplyPaths(p,t.second);
-    if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
-    FieldElement tempCoeff = mField.multiply(c,t.first);
-    result.polynomial.push_back({tempCoeff, tempPathID});
-  } 
+   assert(result.polynomial.size() == 0);
+   // this function assumes that p is a valid PathID
+   // assert(p.getID() != -1);
+   for (const auto &t : f.polynomial)
+   {
+     PathID tempPathID = multiplyPaths(p,t.pathID);
+     if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+     FieldElement tempCoeff = mField.multiply(c,t.coeff);
+     result.polynomial.push_back({tempCoeff, tempPathID});
+   } 
 }  
   
 void PathAlgebra::leftMultiply(PAElement &result, const PathID &p, const PAElement &f)
@@ -246,9 +283,9 @@ void PathAlgebra::rightMultiply(PAElement &result, const PAElement &f, const Pat
   // this version allows for p to be a path with -1 PathID
   for (const auto &t : f.polynomial)
   {
-    PathID tempPathID = multiplyPaths(t.second,p);
+    PathID tempPathID = multiplyPaths(t.pathID,p);
     if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
-    FieldElement tempCoeff = mField.multiply(c,t.first);
+    FieldElement tempCoeff = mField.multiply(c,t.coeff);
     result.polynomial.push_back({tempCoeff, tempPathID});
   } 
 }
@@ -260,13 +297,14 @@ void PathAlgebra::rightMultiply(PAElement &result, const PAElement& f, const Pat
 
 void PathAlgebra::rightMultiply(PAElement &result, const PAElement &f, const PathID &p, const FieldElement &c)
 {
+  assert(result.polynomial.size() == 0);
   // this function multiplies f by cp on the left.
   // this function assumes result is empty before this call.
   for (const auto &t : f.polynomial)
   {
-    PathID tempPathID = multiplyPaths(t.second,p);
+    PathID tempPathID = multiplyPaths(t.pathID,p);
     if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
-    FieldElement tempCoeff = mField.multiply(c,t.first);
+    FieldElement tempCoeff = mField.multiply(c,t.coeff);
     result.polynomial.push_back({tempCoeff, tempPathID});
   } 
 }
@@ -291,8 +329,8 @@ void PathAlgebra::printPAElementByLabel(std::ostream& ostr, const PAElement &f)
    size_t thisTerm = 1;
    for (auto t : f.polynomial)
    {
-     std::string out = mGraph.printEdgeLabel(mPathTable.mPathDictionary[t.second]);
-     ostr << t.first << "*" << out;
+     std::string out = mGraph.printEdgeLabel(mPathTable.mPathDictionary[t.pathID]);
+     ostr << t.coeff << "*" << out;
      if (thisTerm != numTerms) ostr << " + ";
      ++thisTerm;
    }
@@ -309,8 +347,8 @@ void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
    size_t thisTerm = 1;
    for (auto t : f.polynomial)
    {
-     std::string out = mGraph.printEdgeID(mPathTable.mPathDictionary[t.second]);
-     ostr << t.first << "*" << "[" << out << "]";
+     std::string out = mGraph.printEdgeID(mPathTable.mPathDictionary[t.pathID]);
+     ostr << t.coeff << "*" << "[" << out << "]";
      if (thisTerm != numTerms) ostr << " + ";
      ++thisTerm;
    }

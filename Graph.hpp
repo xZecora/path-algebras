@@ -5,6 +5,8 @@
 #include <vector>
 
 class Vertex{
+  friend class Graph;
+
   VertexID vertexID;
   VertexLabel vertexLabel;
 
@@ -62,6 +64,7 @@ public:
       }
       i++;
     }
+    if (i == 0) output.append(vertexList[path.getStartVertex()].vertexLabel);
     return output;
   }
 

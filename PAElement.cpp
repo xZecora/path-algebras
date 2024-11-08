@@ -1,7 +1,7 @@
 #include "PAElement.hpp"
 
-std::vector<std::pair<FieldElement, PathID>> PAElement::combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs) {
-  std::vector<std::pair<FieldElement, PathID>> paired;
+std::vector<Term> PAElement::combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs) {
+  std::vector<Term> paired;
   
   if (paths.size() != coeffs.size())
     return paired;

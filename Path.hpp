@@ -21,6 +21,9 @@ public:
 
   size_t length() const { return mPath.size(); }
 
+  VertexID getStartVertex() const { return mStartVertex; }
+  VertexID getEndVertex() const { return mEndVertex; }
+
   Path(VertexID startVertex,
        VertexID endVertex,
        std::vector<EdgeID> pathEdgeList,

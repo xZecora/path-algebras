@@ -4,6 +4,12 @@
 #include "Path.hpp"
 #include "util.hpp"
 
+struct Term
+{
+  FieldElement coeff;
+  PathID pathID;
+};
+
 class PAElement
 {
   friend class PathAlgebra;
@@ -62,8 +68,8 @@ private:
   //std::vector<PathID> mPaths;
   //std::vector<FieldElement> mCoeffs;
   // MAJOR TODO Is it better to store these as a vector of pairs vs writing a zipper iterator?
-  std::vector<std::pair<FieldElement, PathID>> polynomial;
-  std::vector<std::pair<FieldElement, PathID>> combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs);
+  std::vector<Term> polynomial;
+  std::vector<Term> combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs);
 
 };
 

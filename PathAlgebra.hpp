@@ -58,6 +58,9 @@ private:
   void rightMultiply(PAElement &result, const PAElement &f, const PathID &p, const FieldElement &c);
   void rightMultiply(PAElement &result, const PAElement &f, const PathID &p);
   
+  void multiplyShortLeft(PAElement &result, const PAElement &shortPoly, const PAElement &longPoly);
+  void multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly);
+
   Graph& mGraph;
   Field& mField;
   PathTable mPathTable;

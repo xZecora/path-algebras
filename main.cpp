@@ -18,14 +18,18 @@ int main(int argc, char** argv)
    //Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
 
    Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
+   Graph myGraph2({{2}}, {"v0"}, {"x","y"});
 
    std::vector<WeightVector> weights = {{1},{2},{3},{2},{1}};
+   std::vector<WeightVector> weights2 = {{1},{1}};
 
    PathOrder myPathOrder(weights);
+   PathOrder pathOrder2(weights2);
 
    std::cout << std::endl << std::flush;
 
    PathAlgebra myPathAlgebra(myGraph, myField, myPathOrder);
+   PathAlgebra myPathAlgebra2(myGraph2, myField, pathOrder2);
 
    Path myPath(0,0,{0,0,0,0,0});
    Path myPath2(1,2,{0,1,2,3,4});   // not a valid path... should we error?
@@ -68,6 +72,26 @@ int main(int argc, char** argv)
    myPathAlgebra.subtract(mySum3, mySum1, mySum1);
    myPathAlgebra.printPAElementByLabel(std::cout, mySum3);
    std::cout << std::endl << std::flush;
+
+   Path path_x(0,0,{0});
+   Path path_y(0,0,{1});
+   Path vert(0);
+
+   // should make PathAlgebra method which takes a path and
+   // returns a PAElement (creating PathID if necessary)
+   // insertInDictionary?
+   PathID id_x = myPathAlgebra2.multiplyPaths(vert,path_x);  
+   PathID id_y = myPathAlgebra2.multiplyPaths(vert,path_y);
+   PathID id_vert = myPathAlgebra2.multiplyPaths(vert,vert);
+
+   PAElement elt_v(id_vert);
+   PAElement elt_x(id_x);
+   PAElement elt_y(id_y);
+   PAElement sumxy;
+   myPathAlgebra2.add(sumxy,id_x,id_y);
+
+   myPathAlgebra2.printPAElementByLabel(std::cout, elt_v);
+   std::cout << std::endl;
 
    return 0;
 }
