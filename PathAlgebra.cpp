@@ -5,14 +5,24 @@
 #include <cassert>
 // to remove asserts, use compiler flag -DNDEBUG
 
+// does not currently work, if one of these so a vertex and the other is not in the path table, then we try to add
+// to table but cannot modify the PathID held by the Path object as they are const
+// once we decide on how to handle that it should be fine. (This will fix the bug with path printing we were having)
 PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
 {
   if (path1.mIsVertex)
   {
     if(path1.mEndVertex == path2.mStartVertex)
     {
-      // This needs a lookup to check if it exists in the table at all
-      return path2.mPathID;
+      auto lookup = mPathTable.mReversePathDictionary.find(path2);
+
+      if(lookup == mPathTable.mReversePathDictionary.end()) {
+        path2.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
+        mPathTable.addToTable(path2);                                    // add newPath to both of our path tables
+        return path2.mPathID;                                            // return it
+      } else {
+        return lookup->second; // it already exists, just return that.
+      }
     } else {
       return PathID(0); // ID of the empty path.
     }
@@ -22,8 +32,15 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
   {
     if(path1.mEndVertex == path2.mStartVertex)
     {
-      // This needs a lookup to check if it exists in the table at all
-      return path1.mPathID;
+      auto lookup = mPathTable.mReversePathDictionary.find(path1);
+
+      if(lookup == mPathTable.mReversePathDictionary.end()) {
+        path1.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
+        mPathTable.addToTable(path1);                                    // add newPath to both of our path tables
+        return path1.mPathID;                                            // return it
+      } else {
+        return lookup->second; // it already exists, just return that.
+      }
     } else {
       return PathID(0); // ID of the empty path.
     }

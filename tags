@@ -1,0 +1,111 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	Development	//
+CPP	./Makefile	/^CPP=g++$/;"	m
+CPPFLAGS	./Makefile	/^CPPFLAGS=-std=c++20 -I.$/;"	m
+Compare	./util.hpp	/^enum class Compare { EQ, LT, GT };$/;"	c
+EQ	./util.hpp	/^enum class Compare { EQ, LT, GT };$/;"	m	class:Compare
+Edge	./Graph.cpp	/^Edge::Edge(EdgeID id, EdgeLabel label, VertexID start, VertexID end)$/;"	f	class:Edge
+Edge	./Graph.hpp	/^class Edge{$/;"	c
+Field	./Field.hpp	/^  Field(unsigned int characteristic)$/;"	f	class:Field
+Field	./Field.hpp	/^class Field$/;"	c
+FieldElement	./Field.hpp	/^   FieldElement(unsigned int element)$/;"	f	class:FieldElement
+FieldElement	./Field.hpp	/^class FieldElement$/;"	c
+Graph	./Graph.cpp	/^Graph::Graph(const std::vector<std::vector<int>>& adjMatrix)$/;"	f	class:Graph
+Graph	./Graph.cpp	/^Graph::Graph(const std::vector<std::vector<int>>& adjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels)$/;"	f	class:Graph
+Graph	./Graph.cpp	/^Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix)$/;"	f	class:Graph
+Graph	./Graph.cpp	/^Graph::Graph(const std::vector<std::vector<std::pair<int, int>>>& sparseAdjMatrix, const std::vector<std::string>& vertexLabels, const std::vector<std::string>& edgeLabels)$/;"	f	class:Graph
+Graph	./Graph.hpp	/^class Graph{$/;"	c
+LT	./util.hpp	/^enum class Compare { EQ, LT, GT };$/;"	m	class:Compare
+PAElement	./PAElement.hpp	/^  PAElement(PathID path) \/\/:$/;"	f	class:PAElement
+PAElement	./PAElement.hpp	/^  PAElement(PathID path, FieldElement coeff) \/\/: $/;"	f	class:PAElement
+PAElement	./PAElement.hpp	/^  PAElement(std::vector<PathID> &paths,$/;"	f	class:PAElement
+PAElement	./PAElement.hpp	/^class PAElement$/;"	c
+Path	./Path.hpp	/^  Path() \/\/ case of the zero path$/;"	f	class:Path
+Path	./Path.hpp	/^  Path(VertexID startVertex,$/;"	f	class:Path
+Path	./Path.hpp	/^  explicit Path(VertexID vertexID)   \/\/ make explicit to avoid accidental calls to contains\/find on PathIDs.$/;"	f	class:Path
+Path	./Path.hpp	/^class Path$/;"	c
+PathAlgebra	./PathAlgebra.hpp	/^  PathAlgebra(Graph& graph, Field& field) :$/;"	f	class:PathAlgebra
+PathAlgebra	./PathAlgebra.hpp	/^  PathAlgebra(Graph& graph, Field& field, PathOrder& pathOrder) :$/;"	f	class:PathAlgebra
+PathAlgebra	./PathAlgebra.hpp	/^class PathAlgebra$/;"	c
+PathEqual	./Path.hpp	/^class PathEqual {$/;"	c
+PathHash	./Path.hpp	/^class PathHash {$/;"	c
+PathOrder	./PathOrder.hpp	/^    PathOrder() :$/;"	f	class:PathOrder
+PathOrder	./PathOrder.hpp	/^    PathOrder(const std::vector<WeightVector>& edgeWeights)$/;"	f	class:PathOrder
+PathOrder	./PathOrder.hpp	/^class PathOrder {$/;"	c
+PathTable	./PathTable.hpp	/^  PathTable()$/;"	f	class:PathTable
+PathTable	./PathTable.hpp	/^class PathTable$/;"	c
+Vertex	./Graph.cpp	/^Vertex::Vertex(VertexID id, std::string label)$/;"	f	class:Vertex
+Vertex	./Graph.hpp	/^class Vertex{$/;"	c
+add	./Field.hpp	/^   inline FieldElement add(FieldElement a, FieldElement b)$/;"	f	class:Field
+add	./PathAlgebra.cpp	/^void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g) {$/;"	f	class:PathAlgebra
+addToPathTable	./PathAlgebra.hpp	/^  void addToPathTable(Path& path)$/;"	f	class:PathAlgebra
+addToTable	./PathTable.cpp	/^void PathTable::addToTable(Path& path) {$/;"	f	class:PathTable
+buildEdgeLabels	./Graph.cpp	/^std::vector<std::string> buildEdgeLabels(int numEdges)$/;"	f
+buildEdgeLabels	./Graph.cpp	/^std::vector<std::string> buildEdgeLabels(int numEdges, std::string baseName)$/;"	f
+buildLabels	./Graph.cpp	/^std::vector<std::string> buildLabels(int numLabels, std::string baseName){$/;"	f
+buildVertexLabels	./Graph.cpp	/^std::vector<std::string> buildVertexLabels(int numVertices)$/;"	f
+buildVertexLabels	./Graph.cpp	/^std::vector<std::string> buildVertexLabels(int numVertices, std::string baseName)$/;"	f
+buildVerticesAndEdges	./Graph.cpp	/^void buildVerticesAndEdges(std::vector<std::vector<int>> adjMatrix,$/;"	f
+combineVectors	./PAElement.cpp	/^std::vector<std::pair<FieldElement, PathID>> PAElement::combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs) {$/;"	f	class:PAElement
+comparePaths	./PathOrder.cpp	/^Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const$/;"	f	class:PathOrder
+concatVectors	./util.hpp	/^std::vector<T> concatVectors(std::vector<T> vec1, std::vector<T> vec2)$/;"	f
+divide	./Field.hpp	/^   FieldElement divide(FieldElement a, FieldElement b)$/;"	f	class:Field
+edgeID	./Graph.hpp	/^  EdgeID edgeID;$/;"	m	class:Edge
+edgeLabel	./Graph.hpp	/^  EdgeLabel edgeLabel;$/;"	m	class:Edge
+edgeList	./Graph.hpp	/^  std::vector<Edge> edgeList;$/;"	m	class:Graph
+endVertexID	./Graph.hpp	/^  VertexID endVertexID;$/;"	m	class:Edge
+exponent	./PathAlgebra.cpp	/^void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {$/;"	f	class:PathAlgebra
+findOrAdd	./PathTable.cpp	/^void PathTable::findOrAdd(Path& path)$/;"	f	class:PathTable
+getEdgeList	./Path.hpp	/^  const std::vector<EdgeID>& getEdgeList() const { return mPath; }; \/\/ needed to access the edge list nonlocally$/;"	f	class:Path
+getEndVertex	./Graph.hpp	/^  VertexID getEndVertex(EdgeID edgeID) const { return edgeList[edgeID].endVertexID; }$/;"	f	class:Graph
+getID	./Path.cpp	/^PathID Path::getID() {$/;"	f	class:Path
+getPathList	./Path.hpp	/^  const std::vector<EdgeID>& getPathList() const$/;"	f	class:Path
+getStartVertex	./Graph.hpp	/^  VertexID getStartVertex(EdgeID edgeID) const { return edgeList[edgeID].startVertexID; }$/;"	f	class:Graph
+invert	./Field.hpp	/^   FieldElement invert(FieldElement a)$/;"	f	class:Field
+length	./Path.hpp	/^  size_t length() const { return mPath.size(); }$/;"	f	class:Path
+lengthLexCompare	./PathOrder.cpp	/^Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const$/;"	f	class:PathOrder
+mCharacteristic	./Field.hpp	/^  unsigned int mCharacteristic;$/;"	m	class:Field
+mEdgeWeights	./PathOrder.hpp	/^    std::vector<WeightVector> mEdgeWeights;$/;"	m	class:PathOrder
+mElement	./Field.hpp	/^  unsigned int mElement;$/;"	m	class:FieldElement
+mEndVertex	./Path.hpp	/^  VertexID mEndVertex;$/;"	m	class:Path
+mField	./PathAlgebra.hpp	/^  Field& mField;$/;"	m	class:PathAlgebra
+mGraph	./PathAlgebra.hpp	/^  Graph& mGraph;$/;"	m	class:PathAlgebra
+mHasWeights	./PathOrder.hpp	/^    bool mHasWeights;$/;"	m	class:PathOrder
+mIsVertex	./Path.hpp	/^  bool mIsVertex;$/;"	m	class:Path
+mIsZero	./Path.hpp	/^  bool mIsZero;$/;"	m	class:Path
+mPath	./Path.hpp	/^  std::vector<EdgeID> mPath;$/;"	m	class:Path
+mPathDictionary	./PathTable.hpp	/^  std::vector<Path> mPathDictionary;$/;"	m	class:PathTable
+mPathID	./Path.hpp	/^  PathID mPathID;$/;"	m	class:Path
+mPathOrder	./PathAlgebra.hpp	/^  PathOrder mPathOrder;$/;"	m	class:PathAlgebra
+mPathTable	./PathAlgebra.hpp	/^  PathTable mPathTable;$/;"	m	class:PathAlgebra
+mReversePathDictionary	./PathTable.hpp	/^  std::unordered_map<Path,PathID,PathHash,PathEqual> mReversePathDictionary;$/;"	m	class:PathTable
+mStartVertex	./Path.hpp	/^  VertexID mStartVertex;$/;"	m	class:Path
+mWeightLength	./PathOrder.hpp	/^    int mWeightLength;$/;"	m	class:PathOrder
+main	./main.cpp	/^int main(int argc, char** argv)$/;"	f
+multiply	./Field.hpp	/^   inline FieldElement multiply(FieldElement a, FieldElement b)$/;"	f	class:Field
+multiply	./PathAlgebra.cpp	/^void PathAlgebra::multiply(PAElement &result, const PAElement &f, const PAElement &g) {$/;"	f	class:PathAlgebra
+multiplyPaths	./PathAlgebra.cpp	/^PathID PathAlgebra::multiplyPaths(Path path1, Path path2)$/;"	f	class:PathAlgebra
+negate	./PathAlgebra.cpp	/^void PathAlgebra::negate(PAElement &f) {$/;"	f	class:PathAlgebra
+negate	./PathAlgebra.cpp	/^void PathAlgebra::negate(PAElement &result, const PAElement& f) {$/;"	f	class:PathAlgebra
+operator ()	./Path.hpp	/^  bool operator()(const Path& lhs, const Path& rhs) const$/;"	f	class:PathEqual
+operator ()	./Path.hpp	/^  std::size_t operator()(const Path& p) const$/;"	f	class:PathHash
+operator <<	./Field.cpp	/^std::ostream& operator<<(std::ostream& ostr, const FieldElement& f)$/;"	f
+pathWeight	./PathOrder.cpp	/^WeightVector PathOrder::pathWeight(const Path& path1) const {$/;"	f	class:PathOrder
+polynomial	./PAElement.hpp	/^  std::vector<std::pair<FieldElement, PathID>> polynomial;$/;"	m	class:PAElement
+power	./Field.cpp	/^FieldElement Field::power(FieldElement a, unsigned int pow)$/;"	f	class:Field
+printEdgeID	./Graph.hpp	/^  std::string printEdgeID(const Path& path) const$/;"	f	class:Graph
+printEdgeID	./Path.cpp	/^std::string Path::printEdgeID() const$/;"	f	class:Path
+printEdgeLabel	./Graph.hpp	/^  std::string printEdgeLabel(const Path& path) const$/;"	f	class:Graph
+printEdgeLabels	./Path.cpp	/^std::string Path::printEdgeLabels() const { return this->printEdgeID(); }$/;"	f	class:Path
+sparseToDense	./Graph.cpp	/^std::vector<std::vector<int>> sparseToDense(const std::vector<std::vector<std::pair<int, int>>>& sparseMatrix)$/;"	f
+startVertexID	./Graph.hpp	/^  VertexID startVertexID;$/;"	m	class:Edge
+subtract	./Field.hpp	/^   inline FieldElement subtract(FieldElement a, FieldElement b)$/;"	f	class:Field
+subtract	./PathAlgebra.cpp	/^void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElement &g) {$/;"	f	class:PathAlgebra
+vertexID	./Graph.hpp	/^  VertexID vertexID;$/;"	m	class:Vertex
+vertexLabel	./Graph.hpp	/^  VertexLabel vertexLabel;$/;"	m	class:Vertex
+vertexList	./Graph.hpp	/^  std::vector<Vertex> vertexList;$/;"	m	class:Graph
+weightCompare	./PathOrder.cpp	/^Compare PathOrder::weightCompare(const Path& path1, const Path& path2) const$/;"	f	class:PathOrder

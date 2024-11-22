@@ -18,7 +18,7 @@ int main(int argc, char** argv)
    //Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
 
    Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
-   Graph myGraph2({{2}}, {"v0"}, {"x","y"});
+   Graph myGraph2({ std::vector<int> {2} }, {"v0"}, {"x","y"});
 
    std::vector<WeightVector> weights = {{1},{2},{3},{2},{1}};
    std::vector<WeightVector> weights2 = {{1},{1}};
@@ -90,7 +90,18 @@ int main(int argc, char** argv)
    PAElement sumxy;
    myPathAlgebra2.add(sumxy,id_x,id_y);
 
+   std::cout << "Number of terms in elt_x: " << elt_x.numTerms() << std::endl;
+   std::cout << "Number of terms in elt_y: " << elt_y.numTerms() << std::endl;
+   std::cout << "Number of terms in sumxy: " << sumxy.numTerms() << std::endl;
+
+   std::cout << "x ID: " << id_x << std::endl;
+   std::cout << "y ID: " << id_y << std::endl;
+
    myPathAlgebra2.printPAElementByLabel(std::cout, elt_v);
+   std::cout << std::endl;
+   myPathAlgebra2.printPAElementByPathID(std::cout, elt_v);
+   std::cout << std::endl;
+   myPathAlgebra2.printPAElementByLabel(std::cout, sumxy);
    std::cout << std::endl;
 
    return 0;
