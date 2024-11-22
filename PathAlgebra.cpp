@@ -14,15 +14,7 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
   {
     if(path1.mEndVertex == path2.mStartVertex)
     {
-      auto lookup = mPathTable.mReversePathDictionary.find(path2);
-
-      if(lookup == mPathTable.mReversePathDictionary.end()) {
-        path2.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
-        mPathTable.addToTable(path2);                                    // add newPath to both of our path tables
-        return path2.mPathID;                                            // return it
-      } else {
-        return lookup->second; // it already exists, just return that.
-      }
+      return mPathTable.findOrAdd(path2);
     } else {
       return PathID(0); // ID of the empty path.
     }
@@ -32,15 +24,7 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
   {
     if(path1.mEndVertex == path2.mStartVertex)
     {
-      auto lookup = mPathTable.mReversePathDictionary.find(path1);
-
-      if(lookup == mPathTable.mReversePathDictionary.end()) {
-        path1.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
-        mPathTable.addToTable(path1);                                    // add newPath to both of our path tables
-        return path1.mPathID;                                            // return it
-      } else {
-        return lookup->second; // it already exists, just return that.
-      }
+      return mPathTable.findOrAdd(path1);
     } else {
       return PathID(0); // ID of the empty path.
     }
@@ -51,18 +35,7 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
     // perhaps have a constructor for concatenation?
     Path newPath = Path(path1.mStartVertex, path2.mEndVertex, concatVectors(path1.mPath, path2.mPath), false);
 
-    // Need to know if our new path has been made already. If it hasn't, then we want to append it to he dictionary and set the ID,
-    // otherwise, just set the ID
-    auto lookup = mPathTable.mReversePathDictionary.find(newPath);
-
-    if(lookup == mPathTable.mReversePathDictionary.end()) {
-      newPath.mPathID = mPathTable.mPathDictionary.size();               // now give it its ID
-      mPathTable.addToTable(newPath);                                    // add newPath to both of our path tables
-      return newPath.mPathID;                                            // return it
-    } else {
-      return lookup->second; // it already exists, just return that.
-    }
-
+    return mPathTable.findOrAdd(newPath);
   } else {
     return PathID(0); // ID of the empty path.
   }
@@ -96,8 +69,8 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
     const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
     const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
-    std::cout << mGraph.printEdgeLabel(fPath) << std::endl;
-    std::cout << mGraph.printEdgeLabel(gPath) << std::endl;
+    std::cout << mGraph.printPathByLabel(fPath) << std::endl;
+    std::cout << mGraph.printPathByLabel(gPath) << std::endl;
 
     std::cout << "About to compare paths." << std::endl;
     // if fPath heavier, add from f
@@ -166,8 +139,8 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
     const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
     const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
-    std::cout << mGraph.printEdgeLabel(fPath) << std::endl;
-    std::cout << mGraph.printEdgeLabel(gPath) << std::endl;
+    std::cout << mGraph.printPathByLabel(fPath) << std::endl;
+    std::cout << mGraph.printPathByLabel(gPath) << std::endl;
 
     std::cout << "About to compare paths." << std::endl;
     // if fPath heavier, add from f
@@ -346,7 +319,8 @@ void PathAlgebra::printPAElementByLabel(std::ostream& ostr, const PAElement &f)
    size_t thisTerm = 1;
    for (auto t : f.polynomial)
    {
-     std::string out = mGraph.printEdgeLabel(mPathTable.mPathDictionary[t.pathID]);
+     std::string out;
+     out = mGraph.printPathByLabel(mPathTable.mPathDictionary[t.pathID]);
      ostr << t.coeff << "*" << out;
      if (thisTerm != numTerms) ostr << " + ";
      ++thisTerm;

@@ -13,12 +13,14 @@ public:
     : mPathDictionary({Path()}),
       mReversePathDictionary( {{ mPathDictionary[0], (PathID) 0 }} )
   {
+      mPathDictionary[0].mPathID = 0;
   }
 
-  void addToTable(Path& path);
-  void findOrAdd(Path& path);
+  PathID findOrAdd(const Path& path);
 
 private:
+  PathID addToTable(const Path& path);
+
   std::vector<Path> mPathDictionary;
   std::unordered_map<Path,PathID,PathHash,PathEqual> mReversePathDictionary;
   //std::unordered_map<Path,PathID,PathHash> mReversePathDictionary;

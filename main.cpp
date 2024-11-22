@@ -41,8 +41,8 @@ int main(int argc, char** argv)
    myPathAlgebra.addToPathTable(myPath);
 
    std::cout << myGraph.printEdgeID(myPath) << std::endl;
-   std::cout << myGraph.printEdgeLabel(myPath) << std::endl;
-   std::cout << myGraph.printEdgeLabel(myPath2) << std::endl;
+   std::cout << myGraph.printPathByLabel(myPath) << std::endl;
+   std::cout << myGraph.printPathByLabel(myPath2) << std::endl;
 
    PathID multPath1 = myPathAlgebra.multiplyPaths(myPath,myPath);
    PathID multPath2 = myPathAlgebra.multiplyPaths(myPath,myPath);
@@ -84,6 +84,8 @@ int main(int argc, char** argv)
    PathID id_y = myPathAlgebra2.multiplyPaths(vert,path_y);
    PathID id_vert = myPathAlgebra2.multiplyPaths(vert,vert);
 
+   std::cout << "id_vert" << id_vert << std::endl;
+
    PAElement elt_v(id_vert);
    PAElement elt_x(id_x);
    PAElement elt_y(id_y);
@@ -102,6 +104,8 @@ int main(int argc, char** argv)
    myPathAlgebra2.printPAElementByPathID(std::cout, elt_v);
    std::cout << std::endl;
    myPathAlgebra2.printPAElementByLabel(std::cout, sumxy);
+   std::cout << std::endl;
+   myPathAlgebra2.printPAElementByPathID(std::cout, sumxy);
    std::cout << std::endl;
 
    return 0;

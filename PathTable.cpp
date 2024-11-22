@@ -1,18 +1,21 @@
 #include "PathTable.hpp"
 
-void PathTable::addToTable(Path& path) {
+PathID PathTable::addToTable(const Path& path) {
   this->mPathDictionary.push_back(path);                     // path is new, add it to our dictionary
-  this->mReversePathDictionary.insert({path,mPathDictionary.size()-1});   // also add it to the reverse dictionary
+  PathID newPathID = mPathDictionary.size()-1;
+  this->mReversePathDictionary.insert({path,newPathID});   // also add it to the reverse dictionary
+  mPathDictionary[newPathID].mPathID = newPathID;
+  return newPathID;
 }
 
-void PathTable::findOrAdd(Path& path)
+PathID PathTable::findOrAdd(const Path& path)
 {
     auto lookup = this->mReversePathDictionary.find(path);
-
+    PathID newPathID;
     if(lookup == this->mReversePathDictionary.end()) {
-      path.mPathID = this->mPathDictionary.size();               // now give it its ID
-      this->addToTable(path);                                    // add newPath to both of our path tables
+      newPathID = addToTable(path);
     } else {
-      path = lookup->first;
+      newPathID = lookup->second;
     }
+    return newPathID;
 }

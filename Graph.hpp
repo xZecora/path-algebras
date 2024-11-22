@@ -3,6 +3,7 @@
 #include "Path.hpp"
 #include "util.hpp"
 #include <vector>
+#include <iostream>
 
 class Vertex{
   friend class Graph;
@@ -52,7 +53,7 @@ public:
   VertexID getStartVertex(EdgeID edgeID) const { return edgeList[edgeID].startVertexID; }
   VertexID getEndVertex(EdgeID edgeID) const { return edgeList[edgeID].endVertexID; }
 
-  std::string printEdgeLabel(const Path& path) const
+  std::string printPathByLabel(const Path& path) const
   {
     std::string output = "";
     int i = 0;
@@ -65,6 +66,7 @@ public:
       i++;
     }
     if (i == 0) output.append(vertexList[path.getStartVertex()].vertexLabel);
+    std::cout << "Start Vert: " << path.getStartVertex() << "  End" << std::endl << std::flush;
     return output;
   }
 

@@ -14,7 +14,6 @@ class Path
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
-  std::string printEdgeLabels() const;
   std::string printEdgeID() const;
 
   PathID getID();
@@ -85,6 +84,11 @@ class PathEqual {
     {
       return false;
     }
+    // at this point they are the same length.  If zero, just check start vertices
+    if (lhs.mPath.size() == 0)
+       return (lhs.mStartVertex == rhs.mStartVertex);
+
+    // now they are not vertices, so 
     // iterate over the lists to check equality
     int i = 0;
     for(EdgeID id : rhs.mPath) {
