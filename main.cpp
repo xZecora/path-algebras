@@ -48,20 +48,14 @@ int main(int argc, char** argv)
    PathID multPath2 = myPathAlgebra.multiplyPaths(myPath,myPath);
    PathID multPath3 = myPathAlgebra.multiplyPaths(myPath,myPath3);
 
-   std::cout << "PathID1: " << multPath1 << std::endl;
-   std::cout << "PathID2: " << multPath2 << std::endl;
-   std::cout << "PathID3: " << multPath3 << std::endl;
-
    PAElement monom1(multPath1);
    PAElement monom2(multPath1, FieldElement { 2 });
    PAElement monom3(multPath3);
 
-   std::cout << "Entering sum code." << std::endl;
    PAElement mySum1, mySum2;
    myPathAlgebra.add(mySum1,monom1,monom2);
    myPathAlgebra.add(mySum2,monom1,monom3);
 
-   std::cout << "Number of terms in mySum2: " << mySum2.numTerms() << std::endl;
 
    myPathAlgebra.printPAElementByLabel(std::cout, mySum1);
    std::cout << std::endl;
@@ -83,21 +77,19 @@ int main(int argc, char** argv)
    PathID id_x = myPathAlgebra2.multiplyPaths(vert,path_x);  
    PathID id_y = myPathAlgebra2.multiplyPaths(vert,path_y);
    PathID id_vert = myPathAlgebra2.multiplyPaths(vert,vert);
+   PathID id_x2 = myPathAlgebra2.multiplyPaths(id_x,id_x);
 
    std::cout << "id_vert" << id_vert << std::endl;
 
    PAElement elt_v(id_vert);
    PAElement elt_x(id_x);
    PAElement elt_y(id_y);
+   PAElement elt_x2(id_x2);
    PAElement sumxy;
+   PAElement zeroPA(0);
    myPathAlgebra2.add(sumxy,id_x,id_y);
-
-   std::cout << "Number of terms in elt_x: " << elt_x.numTerms() << std::endl;
-   std::cout << "Number of terms in elt_y: " << elt_y.numTerms() << std::endl;
-   std::cout << "Number of terms in sumxy: " << sumxy.numTerms() << std::endl;
-
-   std::cout << "x ID: " << id_x << std::endl;
-   std::cout << "y ID: " << id_y << std::endl;
+   PAElement expXplusY;
+   myPathAlgebra2.exponent(expXplusY,sumxy,20);
 
    myPathAlgebra2.printPAElementByLabel(std::cout, elt_v);
    std::cout << std::endl;
@@ -107,6 +99,12 @@ int main(int argc, char** argv)
    std::cout << std::endl;
    myPathAlgebra2.printPAElementByPathID(std::cout, sumxy);
    std::cout << std::endl;
-
+   myPathAlgebra2.printPAElementByPathID(std::cout, elt_x2);
+   std::cout << std::endl;
+   myPathAlgebra2.printPAElementByPathID(std::cout, zeroPA);
+   std::cout << std::endl;
+   //myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY);
+   //std::cout << std::endl;
+   
    return 0;
 }

@@ -65,30 +65,22 @@ void PathAlgebra::add(PAElement &result, const PAElement &f, const PAElement &g)
   auto git = g.polynomial.begin();
 
   while (fit != f.polynomial.end() && git != g.polynomial.end()) {
-    std::cout << "Getting paths." << std::endl;
     const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
     const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
-    std::cout << mGraph.printPathByLabel(fPath) << std::endl;
-    std::cout << mGraph.printPathByLabel(gPath) << std::endl;
-
-    std::cout << "About to compare paths." << std::endl;
     // if fPath heavier, add from f
     Compare comp = mPathOrder.comparePaths(fPath,gPath);
 
     switch (comp) {
       case Compare::GT:
-	      std::cout << "f heavier" << std::endl;
 	      result.polynomial.push_back({fit->coeff,fit->pathID});
 	      ++fit;
 	      break;
       case Compare::LT:
-	      std::cout << "g heavier" << std::endl;
 	      result.polynomial.push_back({git->coeff,git->pathID});
 	      ++git;
 	      break;
       case Compare::EQ:
-	      std::cout << "f and g same" << std::endl;
               FieldElement sum = mField.add(fit->coeff,git->coeff);
               // if our sum is 0, then we dont want to add it and just want to move on.
               if(!sum.isZero())
@@ -135,30 +127,22 @@ void PathAlgebra::subtract(PAElement &result, const PAElement &f, const PAElemen
   auto git = g.polynomial.begin();
 
   while (fit != f.polynomial.end() && git != g.polynomial.end()) {
-    std::cout << "Getting paths." << std::endl;
     const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
     const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
 
-    std::cout << mGraph.printPathByLabel(fPath) << std::endl;
-    std::cout << mGraph.printPathByLabel(gPath) << std::endl;
-
-    std::cout << "About to compare paths." << std::endl;
     // if fPath heavier, add from f
     Compare comp = mPathOrder.comparePaths(fPath,gPath);
 
     switch (comp) {
       case Compare::GT:
-	      std::cout << "f heavier" << std::endl;
 	      result.polynomial.push_back({fit->coeff,fit->pathID});
 	      ++fit;
 	      break;
       case Compare::LT:
-	      std::cout << "g heavier" << std::endl;
 	      result.polynomial.push_back({mField.negate(git->coeff),git->pathID});
 	      ++git;
 	      break;
       case Compare::EQ:
-	      std::cout << "f and g same" << std::endl;
               FieldElement diff = mField.subtract(fit->coeff,git->coeff);
               // if our sum is 0, then we dont want to add it and just want to move on.
               if(!diff.isZero())
@@ -305,7 +289,24 @@ void PathAlgebra::rightMultiply(PAElement &result, const PAElement&f, const Path
 }
 
 void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {
-
+   // exponents must be nonnegative
+   assert(n >= 0);
+   switch (n) {
+     case 0:
+        //result = paOne;
+        break;
+     case 1:
+	result = f;
+	break;
+     default:
+        result = f;
+        for (auto i = 1; i < n; ++i)
+	{
+	   PAElement tmp;
+	   multiply(tmp, result, f);
+	   result = tmp;
+	}
+   }
 }
 
 void PathAlgebra::printPAElementByLabel(std::ostream& ostr, const PAElement &f)
@@ -338,8 +339,20 @@ void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
    size_t thisTerm = 1;
    for (auto t : f.polynomial)
    {
-     std::string out = mGraph.printEdgeID(mPathTable.mPathDictionary[t.pathID]);
-     ostr << t.coeff << "*" << "[" << out << "]";
+     const Path& thisPath = mPathTable.mPathDictionary[t.pathID];
+     std::string out = mGraph.printEdgeID(thisPath);
+     std::string leftDelim,rightDelim;
+     if (not thisPath.mIsVertex)
+     {
+        leftDelim = "[";
+	rightDelim = "]";
+     }
+     else
+     {
+        leftDelim = "{";
+	rightDelim = "}";
+     }
+     ostr << t.coeff << "*" << leftDelim << out << rightDelim;
      if (thisTerm != numTerms) ostr << " + ";
      ++thisTerm;
    }

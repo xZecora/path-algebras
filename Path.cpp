@@ -22,6 +22,8 @@ std::string Path::printEdgeID() const
 {
   std::string output = "";
   int i = 0;
+  if (mIsZero) return "";
+  if (mIsVertex) return std::to_string(mStartVertex);
   for(EdgeID itr: this->mPath) {
     if(i+1 == this->mPath.size()){
       output.append(std::to_string(itr));
