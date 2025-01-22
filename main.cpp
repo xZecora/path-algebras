@@ -4,6 +4,8 @@
 #include "PathAlgebra.hpp"
 #include "PAElement.hpp"
 
+#include <chrono>
+
 int main(int argc, char** argv)
 {
    FieldElement a { 10 };
@@ -89,7 +91,15 @@ int main(int argc, char** argv)
    PAElement zeroPA(0);
    myPathAlgebra2.add(sumxy,id_x,id_y);
    PAElement expXplusY;
-   myPathAlgebra2.exponent(expXplusY,sumxy,20);
+   PAElement bigMult;
+   myPathAlgebra2.exponent(expXplusY,sumxy,8);
+   
+   auto startTime = std::chrono::high_resolution_clock::now();
+   myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
+   auto endTime = std::chrono::high_resolution_clock::now();
+
+   auto duration = duration_cast<std::chrono::milliseconds>(endTime-startTime);
+   std::cout << "Duration for big multiplication: " << duration.count() << "ms" << std::endl;
 
    myPathAlgebra2.printPAElementByLabel(std::cout, elt_v);
    std::cout << std::endl;

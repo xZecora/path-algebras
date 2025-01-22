@@ -3,6 +3,8 @@
 //#include <algorithm>
 
 #include <cassert>
+#include <chrono>
+
 // to remove asserts, use compiler flag -DNDEBUG
 
 // does not currently work, if one of these so a vertex and the other is not in the path table, then we try to add
@@ -195,7 +197,11 @@ void PathAlgebra::multiplyShortLeft(PAElement &result, const PAElement &shortPol
       leftMultiply(tempElt, t.pathID, t.coeff, longPoly);
       tempVec.push_back(tempElt);
    }
+   auto startTime = std::chrono::high_resolution_clock::now();
    add(result,tempVec);
+   auto endTime = std::chrono::high_resolution_clock::now();
+   auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
@@ -208,7 +214,11 @@ void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPol
       rightMultiply(tempElt, longPoly, t.pathID, t.coeff);
       tempVec.push_back(tempElt);
    }
+   auto startTime = std::chrono::high_resolution_clock::now();
    add(result,tempVec);
+   auto endTime = std::chrono::high_resolution_clock::now();
+   auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const FieldElement &c, const PAElement &f)

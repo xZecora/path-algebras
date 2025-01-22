@@ -116,7 +116,7 @@ public:
     for (auto e : p.mPath) 
     {
        hash ^= e + 0x9e3779b9 + (hash << 6) + (hash >> 2);
-       //hash += 12345*hash + e + 1;
+         //hash += 12345*hash + e + 1;
     }
     return hash;
   }
