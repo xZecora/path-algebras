@@ -38,3 +38,37 @@ std::string Path::printEdgeID() const
 PathID Path::getID() {
   return this->mPathID;
 }
+
+// Very naive, O(wordLen)
+// Because this isn't an ordered list I don't know any faster way than parallellizing 
+int isSubword(const Path& sub, const Path& word) {
+  std::vector<EdgeID> subList = sub.getEdgeList();
+  std::vector<EdgeID> wordList = word.getEdgeList();
+  size_t wordLen = word.length();
+  size_t subLen = sub.length();
+  int s = 0;
+  int location = -1;
+
+  for (int i = 0; i < wordLen; i++)
+  {
+    if(subList[s] == wordList[i])
+    {
+      if(s == 0)
+        location = i;
+      s++;
+    }
+    else if (s != 0 && subList[0] == wordList[i])
+    {
+      location = i;
+      s = 1;
+    }
+    else
+    {
+      location = -1;
+      s = 0;
+    }
+    if (s == subLen)
+      return location;
+  }
+  return -1;
+}
