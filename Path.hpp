@@ -62,7 +62,8 @@ public:
     return this->mPath;
   }
 
-  bool isSubword(const Path& sub, const Path& word);
+  int isSubword(const Path& sub, const Path& word);
+  int isAnySubword(const std::vector<Path>& subDict, const Path& word);
 
 private:
   bool mIsZero;
