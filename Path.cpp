@@ -106,11 +106,8 @@ int Path::isAnySubword(const std::vector<Path>& subDict, const Path& superPath){
   std::vector<EdgeID> word = superPath.getEdgeList();
   size_t wordLen = superPath.length();
 
-  // I want to remove elements for subDict to shorten checks later on.
-  std::vector<Path> dictCopy = subDict;
-
   for (int i = 0; i < wordLen; i++)
-    for (auto subWord : dictCopy)
+    for (auto subWord : subDict)
       if(!(wordLen-i <= subWord.length()) && word[i] == subWord.mPath[0] && memcmp(&(word[i]), &subWord, subWord.length()*sizeof(EdgeID)))
         return i;
 
