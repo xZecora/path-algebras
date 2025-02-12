@@ -102,14 +102,21 @@ int Path::isSubword(const Path& subPath, const Path& superPath) {
   */
 }
 
-int Path::isAnySubword(const std::vector<Path>& subDict, const Path& superPath){
+// return (i,j) where subword j in subDict is found in position i of word.
+std::pair<int,int> Path::isAnySubword(const std::vector<const Path&>& subDict, const Path& superPath){
   std::vector<EdgeID> word = superPath.getEdgeList();
   size_t wordLen = superPath.length();
-
+  int j = 0;
   for (int i = 0; i < wordLen; i++)
-    for (auto subWord : subDict)
-      if(!(wordLen-i <= subWord.length()) && word[i] == subWord.mPath[0] && memcmp(&(word[i]), &subWord, subWord.length()*sizeof(EdgeID)))
-        return i;
-
-  return -1;
+  {
+    for (int j = 0; j < subDict.size(); ++j)
+    {
+      if(!(wordLen-i <= subDict[j].length()) &&
+         word[i] == subDict[j].mPath[0] &&
+         memcmp(&(word[i]), &subDict[j], subDict[j].length()*sizeof(EdgeID)))
+        return {i,j};
+      ++j;
+    }
+  }
+  return {-1,-1};
 }

@@ -10,6 +10,7 @@ class Path
   friend class PathEqual;
   friend class PathAlgebra;
   friend class PathTable;
+  friend class PathOrder;
   
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
@@ -63,7 +64,8 @@ public:
   }
 
   int isSubword(const Path& sub, const Path& word);
-  int isAnySubword(const std::vector<Path>& subDict, const Path& word);
+  std::pair<int,int> isAnySubword(const std::vector<const Path&>& subDict, const Path& word);
+  // return (i,j) where subword j in subDict is found in position i of word.
 
 private:
   bool mIsZero;
