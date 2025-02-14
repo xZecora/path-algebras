@@ -80,6 +80,9 @@ int main(int argc, char** argv)
    PathID id_y = myPathAlgebra2.multiplyPaths(vert,path_y);
    PathID id_vert = myPathAlgebra2.multiplyPaths(vert,vert);
    PathID id_x2 = myPathAlgebra2.multiplyPaths(id_x,id_x);
+   PathID id_xy = myPathAlgebra2.multiplyPaths(id_x,id_y);
+   PathID id_yx = myPathAlgebra2.multiplyPaths(id_y,id_x);
+   PathID id_xyxy = myPathAlgebra2.multiplyPaths(id_xy,id_xy);
 
    std::cout << "id_vert" << id_vert << std::endl;
 
@@ -92,14 +95,14 @@ int main(int argc, char** argv)
    myPathAlgebra2.add(sumxy,id_x,id_y);
    PAElement expXplusY;
    PAElement bigMult;
-   myPathAlgebra2.exponent(expXplusY,sumxy,8);
+   //myPathAlgebra2.exponent(expXplusY,sumxy,8);
    
-   auto startTime = std::chrono::high_resolution_clock::now();
-   myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
-   auto endTime = std::chrono::high_resolution_clock::now();
+   //auto startTime = std::chrono::high_resolution_clock::now();
+   //myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
+   //auto endTime = std::chrono::high_resolution_clock::now();
 
-   auto duration = duration_cast<std::chrono::milliseconds>(endTime-startTime);
-   std::cout << "Duration for big multiplication: " << duration.count() << "ms" << std::endl;
+   //auto duration = duration_cast<std::chrono::milliseconds>(endTime-startTime);
+   //std::cout << "Duration for big multiplication: " << duration.count() << "ms" << std::endl;
 
    myPathAlgebra2.printPAElementByLabel(std::cout, elt_v);
    std::cout << std::endl;
@@ -115,6 +118,19 @@ int main(int argc, char** argv)
    std::cout << std::endl;
    //myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY);
    //std::cout << std::endl;
-   
+
+   myPathAlgebra2.printPathTable();
+
+   auto myPair = myPathAlgebra2.isAnySubword({id_x}, id_xy);
+   std::cout << myPair.first << " " << myPair.second << std::endl;
+
+   myPair = myPathAlgebra2.isAnySubword({id_y}, id_xy);
+   std::cout << myPair.first << " " << myPair.second << std::endl;
+
+   myPair = myPathAlgebra2.isAnySubword({id_x2, id_yx}, id_xyxy);
+   std::cout << myPair.first << " " << myPair.second << std::endl;
+
+   std::cout << "id_x: " << id_x << std::endl;
+
    return 0;
 }

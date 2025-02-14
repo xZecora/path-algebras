@@ -369,36 +369,36 @@ void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
 }
 
 // input divisors should be preprocessed such that each path inside them starts and ends at the same position as all the others.
-void PathAlgebra::dividePAElement(const std::vector<PAElement> divisors, const PAElement dividend){
-  PAElement curDividend = dividend;
-  while(curDividend.polynomial != {}){
-    dividend.polynomial[0].pathID;
-  }
-}
+//void PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PAElement dividend){
+//  PAElement curDividend = dividend;
+//  while(curDividend.polynomial != {}){
+//    dividend.polynomial[0].pathID;
+//  }
+//}
 
+// return (i,j) where subword j in subDict is found in position i of word.
 std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID){
-  std::vector<EdgeID> word = PathTable.mPathDictionary[superPathID].getEdgeList();
-  size_t wordLen = PathTable.mPathDictionary[superPathID].length();
+  std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
+  size_t wordLen = mPathTable.mPathDictionary[superPathID].length();
   int j = 0;
   for (int i = 0; i < wordLen; i++)
   {
-    for (int j = 0; j < subDict.size(); ++j)
+    for (int j = 0; j < subIDDict.size(); ++j)
     {
-      if(!(wordLen-i <= PathTable.mPathDictoinary[subDict[j]].length()) &&
-         word[i] == PathTable.mPathDictoinary[subDict[j]].mPath[0] &&
-         memcmp(&(word[i]),
-                &PathTable.mPathDictoinary[subDict[j]].mPath[0],
-                PathTable.mPathDictoinary[subDict[j]].length() * sizeof(EdgeID)))
+      if(wordLen-i >= mPathTable.mPathDictionary[subIDDict[j]].length() &&
+         word[i] == mPathTable.mPathDictionary[subIDDict[j]].mPath[0] &&
+         !memcmp(&(word[i]),
+                 &mPathTable.mPathDictionary[subIDDict[j]].mPath[0],
+                 mPathTable.mPathDictionary[subIDDict[j]].length() * sizeof(EdgeID)))
         return {i,j};
-      ++j;
     }
   }
   return {-1,-1};
 }
 
 int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
-  std::vector<EdgeID> subword = PathTable.mPathDictionary[subPathID].getEdgeList();
-  std::vector<EdgeID> word = PathTable.mPathDictionary[superPathID].getEdgeList();
+  std::vector<EdgeID> subword = mPathTable.mPathDictionary[subPathID].getEdgeList();
+  std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
   size_t wordLen = word.size();
   size_t subLen = subword.size();
   
@@ -415,12 +415,18 @@ int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
 }
 
 int PathAlgebra::findOverlap(const PathID& prefix, const PathID& suffix){
-  for (int i = 0; i < this->length(); i++){
-    if((this->length()-i) <= PathTable.mPathDictionary[prefix].length() &&
-       memcmp(&(PathTable.mPathDictionary[suffix].mPath[i]),
-              &(PathTable.mPathDictionary[prefix].mPath[0]),
-              (PathTable.mPathDictionary[suffix].length() - i) * sizeof(EdgeID)))
+  for (int i = 0; i < mPathTable.mPathDictionary[prefix].length(); i++){
+    if((mPathTable.mPathDictionary[prefix].length()-i) <= mPathTable.mPathDictionary[suffix].length() &&
+       !memcmp(&(mPathTable.mPathDictionary[suffix].mPath[i]),
+              &(mPathTable.mPathDictionary[prefix].mPath[0]),
+              (mPathTable.mPathDictionary[suffix].length() - i) * sizeof(EdgeID)))
       return i;
   }
   return -1;
+}
+
+void PathAlgebra::printPathTable() const
+{
+  for (auto thisPath : mPathTable.mPathDictionary)
+     std::cout << thisPath.printEdgeID() << std::endl;
 }
