@@ -53,7 +53,7 @@ int Path::isSubword(const Path& subPath, const Path& superPath) {
   {
     if(wordLen-i <= subLen)
       break;
-    if(word[i] == subword[0] && memcmp(&(word[i]), &subword, subLen))
+    if(word[i] == subword[0] && memcmp(&(word[i]), &subword[0], subLen))
       return i;
   }
 
@@ -103,7 +103,7 @@ int Path::isSubword(const Path& subPath, const Path& superPath) {
 }
 
 // return (i,j) where subword j in subDict is found in position i of word.
-std::pair<int,int> Path::isAnySubword(const std::vector<const Path&>& subDict, const Path& superPath){
+std::pair<int,int> Path::isAnySubword(const std::vector<Path>& subDict, const Path& superPath){
   std::vector<EdgeID> word = superPath.getEdgeList();
   size_t wordLen = superPath.length();
   int j = 0;
@@ -113,10 +113,19 @@ std::pair<int,int> Path::isAnySubword(const std::vector<const Path&>& subDict, c
     {
       if(!(wordLen-i <= subDict[j].length()) &&
          word[i] == subDict[j].mPath[0] &&
-         memcmp(&(word[i]), &subDict[j], subDict[j].length()*sizeof(EdgeID)))
+         memcmp(&(word[i]), &subDict[j].mPath[0], subDict[j].length()*sizeof(EdgeID)))
         return {i,j};
       ++j;
     }
   }
   return {-1,-1};
+}
+
+int Path::findOverlap(const Path& prefix){
+  for (int i = 0; i < this->length(); i++){
+    if((this->length()-i) <= prefix.length() &&
+       memcmp(&(this->mPath[i]), &(prefix.mPath[0]), (this->length()-i)*sizeof(EdgeID)))
+      return i;
+  }
+  return -1;
 }

@@ -31,6 +31,12 @@ public:
   PathID multiplyPaths(PathID path1, const Path& path2);
   PathID multiplyPaths(PathID path1, PathID path2);
 
+  void dividePolynomial(const std::vector<PAElement> divisors, const PAElement dividend){
+
+  int isSubword(const PathID& subPathID, const PathID& superPathID);
+  std::pair<int,int> isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID);
+  int findOverlap(const PathID& prefix, const PathID& suffix);
+
   void addToPathTable(Path& path)
   {
     this->mPathTable.addToTable(path);

@@ -64,8 +64,9 @@ public:
   }
 
   int isSubword(const Path& sub, const Path& word);
-  std::pair<int,int> isAnySubword(const std::vector<const Path&>& subDict, const Path& word);
+  std::pair<int,int> isAnySubword(const std::vector<Path>& subDict, const Path& superPath);
   // return (i,j) where subword j in subDict is found in position i of word.
+  int findOverlap(const Path& prefix);
 
 private:
   bool mIsZero;

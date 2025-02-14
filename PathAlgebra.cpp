@@ -367,3 +367,60 @@ void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
      ++thisTerm;
    }
 }
+
+// input divisors should be preprocessed such that each path inside them starts and ends at the same position as all the others.
+void PathAlgebra::dividePAElement(const std::vector<PAElement> divisors, const PAElement dividend){
+  PAElement curDividend = dividend;
+  while(curDividend.polynomial != {}){
+    dividend.polynomial[0].pathID;
+  }
+}
+
+std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID){
+  std::vector<EdgeID> word = PathTable.mPathDictionary[superPathID].getEdgeList();
+  size_t wordLen = PathTable.mPathDictionary[superPathID].length();
+  int j = 0;
+  for (int i = 0; i < wordLen; i++)
+  {
+    for (int j = 0; j < subDict.size(); ++j)
+    {
+      if(!(wordLen-i <= PathTable.mPathDictoinary[subDict[j]].length()) &&
+         word[i] == PathTable.mPathDictoinary[subDict[j]].mPath[0] &&
+         memcmp(&(word[i]),
+                &PathTable.mPathDictoinary[subDict[j]].mPath[0],
+                PathTable.mPathDictoinary[subDict[j]].length() * sizeof(EdgeID)))
+        return {i,j};
+      ++j;
+    }
+  }
+  return {-1,-1};
+}
+
+int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
+  std::vector<EdgeID> subword = PathTable.mPathDictionary[subPathID].getEdgeList();
+  std::vector<EdgeID> word = PathTable.mPathDictionary[superPathID].getEdgeList();
+  size_t wordLen = word.size();
+  size_t subLen = subword.size();
+  
+
+  for (int i = 0; i < wordLen; i++)
+  {
+    if(wordLen-i <= subLen)
+      break;
+    if(word[i] == subword[0] && memcmp(&(word[i]), &subword[0], subLen))
+      return i;
+  }
+
+  return -1;
+}
+
+int PathAlgebra::findOverlap(const PathID& prefix, const PathID& suffix){
+  for (int i = 0; i < this->length(); i++){
+    if((this->length()-i) <= PathTable.mPathDictionary[prefix].length() &&
+       memcmp(&(PathTable.mPathDictionary[suffix].mPath[i]),
+              &(PathTable.mPathDictionary[prefix].mPath[0]),
+              (PathTable.mPathDictionary[suffix].length() - i) * sizeof(EdgeID)))
+      return i;
+  }
+  return -1;
+}
