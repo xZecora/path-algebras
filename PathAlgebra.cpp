@@ -368,13 +368,111 @@ void PathAlgebra::printPAElementByPathID(std::ostream& ostr, const PAElement &f)
    }
 }
 
+// In this function we assume that you have checked your inputs agree where they start and end
+PathID PathAlgebra::divisionAlgorithm_twoSidedMultiplyPaths(
+    const std::vector<EdgeID>& leftPath,
+    const Path& mainPath,
+    const std::vector<EdgeID>& rightPath,
+    VertexID startVertex,
+    VertexID endVertex)
+{
+  // TODO Write a check for if either path is just a vertex, return whichever is not if compatible.
+  Path newPath = Path(startVertex, endVertex, concatVectors(concatVectors(leftPath, mainPath.mPath), rightPath), ASSUME_VALID);
+
+  return mPathTable.findOrAdd(newPath);
+}
+
+PAElement PathAlgebra::divisionAlgorithm_twoSidedMultiply(
+    const std::vector<EdgeID>& p,
+    const int& coeff,
+    const PAElement& f,
+    const std::vector<EdgeID>& s,
+    const VertexID& startVertex,
+    const VertexID& endVertex)
+{
+  PAElement result;
+   for (const auto &t : f.polynomial)
+   {
+     PathID tempPathID = divisionAlgorithm_twoSidedMultiplyPaths(p, mPathTable.mPathDictionary[t.pathID], s, startVertex, endVertex);
+     if (tempPathID == 0) continue;  // this is the case when paths multiply to zero
+     FieldElement tempCoeff = mField.multiply(coeff,t.coeff);
+     result.polynomial.push_back({tempCoeff, tempPathID});
+   } 
+   return result;
+}
+
+PAElement PathAlgebra::divisionAlgorithm_subtract(const PAElement& f, const PAElement& g){
+
+  PAElement result;
+  // this should compare path weights at each step and add which is heavier
+  auto fit = f.polynomial.begin();
+  auto git = g.polynomial.begin();
+
+  while (fit != f.polynomial.end() && git != g.polynomial.end()) {
+    const Path& fPath = this->mPathTable.mPathDictionary[int(fit->pathID)];
+    const Path& gPath = this->mPathTable.mPathDictionary[int(git->pathID)];
+
+    // if fPath heavier, add from f
+    Compare comp = mPathOrder.comparePaths(fPath,gPath);
+
+    switch (comp) {
+      case Compare::GT:
+	      result.polynomial.push_back({fit->coeff,fit->pathID});
+	      ++fit;
+	      break;
+      case Compare::LT:
+	      result.polynomial.push_back({mField.negate(git->coeff),git->pathID});
+	      ++git;
+	      break;
+      case Compare::EQ:
+              FieldElement diff = mField.subtract(fit->coeff,git->coeff);
+              // if our sum is 0, then we dont want to add it and just want to move on.
+              if(!diff.isZero())
+	        result.polynomial.push_back({diff ,fit->pathID});
+	      ++fit;
+	      ++git;
+	      break;
+    }
+  }
+
+  // add everything from f not already used 
+  while (fit != f.polynomial.end()) {
+	  result.polynomial.push_back({fit->coeff,fit->pathID});
+    ++fit;
+  }
+  // add everything from g not already used 
+  while (git != g.polynomial.end()) {
+	  result.polynomial.push_back({mField.negate(git->coeff),git->pathID});
+    ++git;
+  }
+
+return result;
+}
+
 // input divisors should be preprocessed such that each path inside them starts and ends at the same position as all the others.
-//void PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PAElement dividend){
-//  PAElement curDividend = dividend;
-//  while(curDividend.polynomial != {}){
-//    dividend.polynomial[0].pathID;
-//  }
-//}
+void PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PAElement dividend){
+  PAElement curDividend = dividend;
+  PAElement remainder;
+  std::vector<PathID> divisorLTs = {};
+  for(auto itr : divisors)
+    divisorLTs.push_back(itr.polynomial[0].pathID);
+
+  while(curDividend.polynomial.size() != 0){
+    std::pair<int, int> subword = isAnySubword(divisorLTs, dividend.polynomial[0].pathID);
+    if(subword == (std::pair<int,int>){-1,-1}){
+      // build prefix + suffix from curDividend.polynomial[0].pathID
+      auto preEnd = mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin() + subword.first;
+      std::vector<EdgeID> prefix(mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin(), preEnd);
+      auto sufEnd = mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin() + subword.first + mPathTable.mPathDictionary[divisorLTs[subword.second]].length();
+      std::vector<EdgeID> suffix(sufEnd, mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.end());
+      curDividend = divisionAlgorithm_subtract(curDividend, divisionAlgorithm_twoSidedMultiply(prefix, 0, divisors[subword.second], suffix, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mStartVertex, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mEndVertex));
+    }
+    else{
+      remainder.polynomial.push_back(curDividend.polynomial[0]);
+      curDividend.polynomial.erase(curDividend.polynomial.begin());
+    }
+  }
+}
 
 // return (i,j) where subword j in subDict is found in position i of word.
 std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID){
@@ -387,9 +485,9 @@ std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDic
     {
       if(wordLen-i >= mPathTable.mPathDictionary[subIDDict[j]].length() &&
          word[i] == mPathTable.mPathDictionary[subIDDict[j]].mPath[0] &&
-         !memcmp(&(word[i]),
-                 &mPathTable.mPathDictionary[subIDDict[j]].mPath[0],
-                 mPathTable.mPathDictionary[subIDDict[j]].length() * sizeof(EdgeID)))
+         std::equal(word.begin()+i,
+                     word.begin()+i+mPathTable.mPathDictionary[subIDDict[j]].length(),
+                     mPathTable.mPathDictionary[subIDDict[j]].mPath.begin()))
         return {i,j};
     }
   }
@@ -407,7 +505,7 @@ int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
   {
     if(wordLen-i <= subLen)
       break;
-    if(word[i] == subword[0] && memcmp(&(word[i]), &subword[0], subLen))
+    if(word[i] == subword[0] && std::equal(word.begin()+i, word.begin()+i+subLen, subword.begin()))
       return i;
   }
 
@@ -417,9 +515,9 @@ int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
 int PathAlgebra::findOverlap(const PathID& prefix, const PathID& suffix){
   for (int i = 0; i < mPathTable.mPathDictionary[prefix].length(); i++){
     if((mPathTable.mPathDictionary[prefix].length()-i) <= mPathTable.mPathDictionary[suffix].length() &&
-       !memcmp(&(mPathTable.mPathDictionary[suffix].mPath[i]),
-              &(mPathTable.mPathDictionary[prefix].mPath[0]),
-              (mPathTable.mPathDictionary[suffix].length() - i) * sizeof(EdgeID)))
+       std::equal(mPathTable.mPathDictionary[suffix].mPath.begin(),
+                  mPathTable.mPathDictionary[suffix].mPath.begin()+(mPathTable.mPathDictionary[prefix].length()-i),
+                  mPathTable.mPathDictionary[prefix].mPath.begin()+i))
       return i;
   }
   return -1;

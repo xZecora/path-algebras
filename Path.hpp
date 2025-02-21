@@ -1,5 +1,8 @@
 #pragma once
 
+#define ASSUME_VALID false
+#define CHECK_VALID true
+
 #include "util.hpp"
 #include <iostream>
 #include <vector>
