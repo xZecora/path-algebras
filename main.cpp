@@ -10,7 +10,10 @@ int main(int argc, char** argv)
 {
    FieldElement a { 10 };
    FieldElement b { 4 };
+   FieldElement one { 1 };
+
    Field myField { 101 };
+   FieldElement minus_one = myField.negate(one);
 
    std::cout << "Field element a: " << a << std::endl;
    std::cout << "a to the power 15 in field: " << myField.power(a,15)
@@ -83,13 +86,23 @@ int main(int argc, char** argv)
    PathID id_xy = myPathAlgebra2.multiplyPaths(id_x,id_y);
    PathID id_yx = myPathAlgebra2.multiplyPaths(id_y,id_x);
    PathID id_xyxy = myPathAlgebra2.multiplyPaths(id_xy,id_xy);
+   PathID id_xyxyx2 = myPathAlgebra2.multiplyPaths(id_xyxy,id_x2);
 
    std::cout << "id_vert" << id_vert << std::endl;
 
    PAElement elt_v(id_vert);
    PAElement elt_x(id_x);
    PAElement elt_y(id_y);
+   PAElement elt_xy(id_xy);
+   PAElement elt_yx(id_yx);
    PAElement elt_x2(id_x2);
+   PAElement elt_xyxy(id_xyxy);
+   PAElement elt_xyxyx2(id_xyxyx2);
+   PAElement elt_comm;
+   PAElement toReduce;
+   myPathAlgebra2.subtract(elt_comm,elt_yx,elt_xy);
+   myPathAlgebra2.add(toReduce,elt_xyxy,elt_xyxyx2);
+
    PAElement sumxy;
    PAElement zeroPA(0);
    myPathAlgebra2.add(sumxy,id_x,id_y);
@@ -130,7 +143,10 @@ int main(int argc, char** argv)
    myPair = myPathAlgebra2.isAnySubword({id_x2, id_yx}, id_xyxy);
    std::cout << myPair.first << " " << myPair.second << std::endl;
 
-   std::cout << "id_x: " << id_x << std::endl;
+   myPathAlgebra2.printPAElementByLabel(std::cout, myPathAlgebra2.dividePAElement({elt_comm}, elt_xyxy));
+   std::cout << std::endl << std::flush;
+   myPathAlgebra2.printPAElementByLabel(std::cout, myPathAlgebra2.dividePAElement({elt_comm}, toReduce));
+   std::cout << std::endl << std::flush;
 
    return 0;
 }

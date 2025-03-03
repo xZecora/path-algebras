@@ -384,7 +384,7 @@ PathID PathAlgebra::divisionAlgorithm_twoSidedMultiplyPaths(
 
 PAElement PathAlgebra::divisionAlgorithm_twoSidedMultiply(
     const std::vector<EdgeID>& p,
-    const int& coeff,
+    const FieldElement& coeff,
     const PAElement& f,
     const std::vector<EdgeID>& s,
     const VertexID& startVertex,
@@ -450,7 +450,7 @@ return result;
 }
 
 // input divisors should be preprocessed such that each path inside them starts and ends at the same position as all the others.
-void PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PAElement dividend){
+PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PAElement dividend){
   PAElement curDividend = dividend;
   PAElement remainder;
   std::vector<PathID> divisorLTs = {};
@@ -458,27 +458,36 @@ void PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, const PA
     divisorLTs.push_back(itr.polynomial[0].pathID);
 
   while(curDividend.polynomial.size() != 0){
-    std::pair<int, int> subword = isAnySubword(divisorLTs, dividend.polynomial[0].pathID);
-    if(subword == (std::pair<int,int>){-1,-1}){
+    std::pair<int, int> subword = isAnySubword(divisorLTs, curDividend.polynomial[0].pathID);
+    if(subword != (std::pair<int,int>){-1,-1}){
       // build prefix + suffix from curDividend.polynomial[0].pathID
-      auto preEnd = mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin() + subword.first;
-      std::vector<EdgeID> prefix(mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin(), preEnd);
-      auto sufEnd = mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.begin() + subword.first + mPathTable.mPathDictionary[divisorLTs[subword.second]].length();
-      std::vector<EdgeID> suffix(sufEnd, mPathTable.mPathDictionary[dividend.polynomial[0].pathID].mPath.end());
-      curDividend = divisionAlgorithm_subtract(curDividend, divisionAlgorithm_twoSidedMultiply(prefix, 0, divisors[subword.second], suffix, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mStartVertex, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mEndVertex));
+      std::cout << "Found: (" << subword.first << "," << subword.second << ")" << std::endl << std::flush;
+      auto preEnd = mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin() + subword.first;
+      std::vector<EdgeID> prefix(mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin(), preEnd);
+      auto sufBeg = mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin() + subword.first + mPathTable.mPathDictionary[divisorLTs[subword.second]].length();
+      std::vector<EdgeID> suffix(sufBeg, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.end());
+      curDividend = divisionAlgorithm_subtract(curDividend,
+					       divisionAlgorithm_twoSidedMultiply(prefix,
+										  curDividend.polynomial[0].coeff,
+										  divisors[subword.second],
+										  suffix,
+										  mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mStartVertex,
+										  mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mEndVertex));
     }
     else{
       remainder.polynomial.push_back(curDividend.polynomial[0]);
       curDividend.polynomial.erase(curDividend.polynomial.begin());
     }
+    printPAElementByLabel(std::cout, curDividend);
+    std::cout << std::endl << std::flush;
   }
+  return remainder;
 }
 
 // return (i,j) where subword j in subDict is found in position i of word.
 std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID){
   std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
   size_t wordLen = mPathTable.mPathDictionary[superPathID].length();
-  int j = 0;
   for (int i = 0; i < wordLen; i++)
   {
     for (int j = 0; j < subIDDict.size(); ++j)

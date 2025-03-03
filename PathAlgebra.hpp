@@ -31,10 +31,10 @@ public:
   PathID multiplyPaths(PathID path1, const Path& path2);
   PathID multiplyPaths(PathID path1, PathID path2);
 
-  void dividePAElement(const std::vector<PAElement> divisors, const PAElement dividend);
+  PAElement dividePAElement(const std::vector<PAElement> divisors, const PAElement dividend);
 
   PathID divisionAlgorithm_twoSidedMultiplyPaths(const std::vector<EdgeID>& leftPath, const Path& mainPath, const std::vector<EdgeID>& rightPath, VertexID startVertex, VertexID endVertex);
-  PAElement divisionAlgorithm_twoSidedMultiply(const std::vector<EdgeID>& p, const int& coeff, const PAElement& f, const std::vector<EdgeID>& s, const VertexID& startVertex, const VertexID& endVertex);
+  PAElement divisionAlgorithm_twoSidedMultiply(const std::vector<EdgeID>& p, const FieldElement& coeff, const PAElement& f, const std::vector<EdgeID>& s, const VertexID& startVertex, const VertexID& endVertex);
   PAElement divisionAlgorithm_subtract(const PAElement& f, const PAElement& g);
 
   int isSubword(const PathID& subPathID, const PathID& superPathID);
