@@ -62,6 +62,10 @@ public:
   */
 
   long numTerms() { return polynomial.size(); }
+  PathID leadTermID() {
+    if (numTerms() == 0) return 0;
+    return polynomial[0].pathID;
+  }
 
 private:
   // read TODO on l61

@@ -14,7 +14,15 @@ class Path
   friend class PathAlgebra;
   friend class PathTable;
   friend class PathOrder;
-  
+
+private:
+  bool mIsZero;
+  bool mIsVertex;
+  VertexID mStartVertex;
+  VertexID mEndVertex;
+  PathID mPathID;
+  std::vector<EdgeID> mPath;
+
 public:
   const std::vector<EdgeID>& getEdgeList() const { return mPath; }; // needed to access the edge list nonlocally
 
@@ -26,6 +34,9 @@ public:
 
   VertexID getStartVertex() const { return mStartVertex; }
   VertexID getEndVertex() const { return mEndVertex; }
+
+  auto begin() -> decltype(mPath.begin()) { return mPath.begin(); }
+  auto end() -> decltype(mPath.end()) { return mPath.end(); }
 
   Path(VertexID startVertex,
        VertexID endVertex,
@@ -71,13 +82,6 @@ public:
   // return (i,j) where subword j in subDict is found in position i of word.
   int findOverlap(const Path& prefix);
 
-private:
-  bool mIsZero;
-  bool mIsVertex;
-  VertexID mStartVertex;
-  VertexID mEndVertex;
-  PathID mPathID;
-  std::vector<EdgeID> mPath;
 };
 
 class PathEqual {

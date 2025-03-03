@@ -13,7 +13,7 @@ public:
     : mPathDictionary({Path()}),
       mReversePathDictionary( {{ mPathDictionary[0], (PathID) 0 }} )
   {
-      mPathDictionary[0].mPathID = 0;
+      mPathDictionary[0].mPathID = 0; // this is the empty (zero) path
   }
 
   PathID findOrAdd(const Path& path);

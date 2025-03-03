@@ -18,7 +18,7 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
     {
       return mPathTable.findOrAdd(path2);
     } else {
-      return PathID(0); // ID of the empty path.
+      return PathID(0); // ID of the empty (i.e. zero) path.
     }
   }
 
@@ -461,18 +461,20 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
     std::pair<int, int> subword = isAnySubword(divisorLTs, curDividend.polynomial[0].pathID);
     if(subword != (std::pair<int,int>){-1,-1}){
       // build prefix + suffix from curDividend.polynomial[0].pathID
-      std::cout << "Found: (" << subword.first << "," << subword.second << ")" << std::endl << std::flush;
-      auto preEnd = mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin() + subword.first;
-      std::vector<EdgeID> prefix(mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin(), preEnd);
-      auto sufBeg = mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.begin() + subword.first + mPathTable.mPathDictionary[divisorLTs[subword.second]].length();
-      std::vector<EdgeID> suffix(sufBeg, mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mPath.end());
+      auto curLTID = curDividend.leadTermID();
+      auto curLeadTerm = mPathTable.mPathDictionary[curLTID];
+      auto foundPath = mPathTable.mPathDictionary[divisorLTs[subword.second]];
+      auto preEnd = curLeadTerm.begin() + subword.first;
+      std::vector<EdgeID> prefix(curLeadTerm.begin(), preEnd);
+      auto sufBeg = curLeadTerm.begin() + subword.first + foundPath.length();
+      std::vector<EdgeID> suffix(sufBeg, curLeadTerm.end());
       curDividend = divisionAlgorithm_subtract(curDividend,
 					       divisionAlgorithm_twoSidedMultiply(prefix,
 										  curDividend.polynomial[0].coeff,
 										  divisors[subword.second],
 										  suffix,
-										  mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mStartVertex,
-										  mPathTable.mPathDictionary[curDividend.polynomial[0].pathID].mEndVertex));
+										  curLeadTerm.mStartVertex,
+										  curLeadTerm.mEndVertex));
     }
     else{
       remainder.polynomial.push_back(curDividend.polynomial[0]);
