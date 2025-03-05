@@ -6,6 +6,7 @@
 #include "Graph.hpp"
 #include "Field.hpp"
 #include "PAElement.hpp"
+#include "SumCollector.hpp"
 
 #include <vector>
 #include <iostream>
@@ -14,17 +15,22 @@ class PathAlgebra
 {
 public:
   
+  friend class SumCollector;
+  friend class PathIDCompare;
+
   PathAlgebra(Graph& graph, Field& field) :
     mGraph(graph),
     mField(field),
     mPathTable(),
-    mPathOrder() {};
+    mPathOrder(),
+    mSumCollector(*this) {};
 
   PathAlgebra(Graph& graph, Field& field, PathOrder& pathOrder) :
     mGraph(graph),
     mField(field),
     mPathTable(),
-    mPathOrder(pathOrder) {};
+    mPathOrder(pathOrder),
+    mSumCollector(*this) {};
 
   PathID multiplyPaths(const Path& path1, const Path& path2);
   PathID multiplyPaths(const Path& path1, PathID path2);
@@ -78,4 +84,5 @@ private:
   Field& mField;
   PathTable mPathTable;
   PathOrder mPathOrder;
+  SumCollector mSumCollector;
 };

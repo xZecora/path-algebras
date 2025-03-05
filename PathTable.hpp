@@ -17,6 +17,8 @@ public:
   }
 
   PathID findOrAdd(const Path& path);
+  
+  const std::vector<Path>& pathDictionary() const { return mPathDictionary; }
 
 private:
   PathID addToTable(const Path& path);

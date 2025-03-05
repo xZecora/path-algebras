@@ -3,8 +3,8 @@ CPP=g++
 #CPP=/opt/homebrew/bin/g++-13
 CPPFLAGS=-std=c++20 -I.
 
-main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o
-	$(CPP) $(CPPFLAGS) -o main main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o
+main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
+	$(CPP) $(CPPFLAGS) -o main main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
 
 main.o : main.cpp
 	$(CPP) $(CPPFLAGS) -c main.cpp
@@ -30,5 +30,8 @@ PAElement.o : PAElement.cpp
 PathOrder.o : PathOrder.cpp
 	$(CPP) $(CPPFLAGS) -c PathOrder.cpp
 
+SumCollector.o : SumCollector.cpp
+	$(CPP) $(CPPFLAGS) -c SumCollector.cpp
+
 clean :
-	rm main Field.o Graph.o main.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o
+	rm main Field.o Graph.o main.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
