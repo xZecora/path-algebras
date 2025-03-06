@@ -2,6 +2,7 @@
 #include "PathAlgebra.hpp"
 #include "SumCollector.hpp"
 #include "PAElement.hpp"
+#include <iostream>
 
 // this checks whether lhs < rhs
 bool TermCompare::operator()(Term lhs, Term rhs) const
@@ -19,6 +20,11 @@ bool TermCompare::operator()(Term lhs, Term rhs) const
 void SumCollector::add(const PAElement& f)
 {
    std::for_each(f.cbegin(),f.cend(), [&](const Term& t) { mQueue.push(t); });
+}
+
+void SumCollector::add(const std::vector<PAElement>& fVec)
+{
+   std::for_each(fVec.cbegin(), fVec.cend(), [&](const PAElement& f) { add(f); } );
 }
 
 void SumCollector::subtract(const PAElement& f)
@@ -40,13 +46,10 @@ Term SumCollector::leadTerm()
 
   while (!mQueue.empty() && retVal.coeff.isZero())
   {
-    if (mQueue.empty()) return retVal;
-
     auto queueTop = mQueue.top();
-    Term retVal;
     retVal.pathID = queueTop.pathID;
-
-    while (mQueue.top().pathID == queueTop.pathID)
+    
+    while (!mQueue.empty() && mQueue.top().pathID == queueTop.pathID)
     {
       retVal.coeff = mPathAlgebra.mField.add(retVal.coeff,mQueue.top().coeff);
       mQueue.pop();

@@ -22,15 +22,13 @@ public:
     mGraph(graph),
     mField(field),
     mPathTable(),
-    mPathOrder(),
-    mSumCollector(*this) {};
+    mPathOrder() {};
 
   PathAlgebra(Graph& graph, Field& field, PathOrder& pathOrder) :
     mGraph(graph),
     mField(field),
     mPathTable(),
-    mPathOrder(pathOrder),
-    mSumCollector(*this) {};
+    mPathOrder(pathOrder) {};
 
   PathID multiplyPaths(const Path& path1, const Path& path2);
   PathID multiplyPaths(const Path& path1, PathID path2);
@@ -54,12 +52,13 @@ public:
   }
 
   void add(PAElement &result, const PAElement &f, const PAElement &g);
-  void addSC(PAElement &result, const PAElement &f, const PAElement &g);
   void subtract(PAElement &result, const PAElement &f, const PAElement &g);
   void negate(PAElement &result, const PAElement& f);
   void negate(PAElement &f);
   void multiply(PAElement &result, const PAElement &f, const PAElement &g);
+  void multiplySC(PAElement &result, const PAElement &f, const PAElement &g);
   void exponent(PAElement &result, const PAElement &f, long n);
+  void exponentSC(PAElement &result, const PAElement &f, long n);
 
   void printPAElementByLabel(std::ostream& ostr, const PAElement &f);
   void printPAElementByPathID(std::ostream& ostr, const PAElement &f);
@@ -80,10 +79,11 @@ private:
   
   void multiplyShortLeft(PAElement &result, const PAElement &shortPoly, const PAElement &longPoly);
   void multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly);
+  void multiplyShortLeftSC(PAElement &result, const PAElement &shortPoly, const PAElement &longPoly);
+  void multiplyShortRightSC(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly);
 
   Graph& mGraph;
   Field& mField;
   PathTable mPathTable;
   PathOrder mPathOrder;
-  SumCollector mSumCollector;
 };

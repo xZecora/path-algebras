@@ -1,6 +1,7 @@
 #pragma once
 
 #include <queue>
+#include <vector>
 
 class PathAlgebra;
 class PAElement;
@@ -27,6 +28,7 @@ public:
 
   // add or subtract a PAElement to the heap
   void add(const PAElement& f);
+  void add(const std::vector<PAElement>& f);
   void subtract(const PAElement& f);
   
   // pop all values from the heap, and return its sum

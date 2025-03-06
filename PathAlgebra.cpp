@@ -540,7 +540,73 @@ void PathAlgebra::printPathTable() const
      std::cout << thisPath.printEdgeID() << std::endl;
 }
 
-void PathAlgebra::addSC(PAElement &result, const PAElement &f, const PAElement &g) {
 
+void PathAlgebra::multiplySC(PAElement &result, const PAElement &f, const PAElement &g)
+{
+  assert(result.polynomial.size() == 0);
+  if (f.polynomial.size() < g.polynomial.size())
+     multiplyShortLeftSC(result, f, g);
+  else
+     multiplyShortRightSC(result, f, g);
 }
 
+void PathAlgebra::multiplyShortLeftSC(PAElement &result, const PAElement &shortPoly, const PAElement &longPoly)
+{
+   assert(result.polynomial.size() == 0);
+   SumCollector sumCollector(*this);
+   std::vector<PAElement> tempVec;
+   for (const auto &t : shortPoly.polynomial)
+   {
+      PAElement tempElt;
+      leftMultiply(tempElt, t.pathID, t.coeff, longPoly);
+      tempVec.push_back(tempElt);
+   }
+   auto startTime = std::chrono::high_resolution_clock::now();
+   std::cout << "Starting SumCollector" << std::endl << std::flush;
+   sumCollector.add(tempVec);
+   result = sumCollector.value();
+   std::cout << "Finished SumCollector" << std::endl << std::flush;
+   auto endTime = std::chrono::high_resolution_clock::now();
+   auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+}
+
+void PathAlgebra::multiplyShortRightSC(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
+{
+   assert(result.polynomial.size() == 0);
+   std::vector<PAElement> tempVec;
+   SumCollector sumCollector(*this);
+   for (const auto &t : shortPoly.polynomial)
+   {
+      PAElement tempElt;
+      rightMultiply(tempElt, longPoly, t.pathID, t.coeff);
+      tempVec.push_back(tempElt);
+   }
+   auto startTime = std::chrono::high_resolution_clock::now();
+   sumCollector.add(tempVec);
+   result = sumCollector.value();
+   auto endTime = std::chrono::high_resolution_clock::now();
+   auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+}
+
+void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
+   // exponents must be nonnegative
+   assert(n >= 0);
+   switch (n) {
+     case 0:
+        //result = paOne;
+        break;
+     case 1:
+	result = f;
+	break;
+     default:
+        result = f;
+        for (auto i = 1; i < n; ++i)
+	{
+	   PAElement tmp;
+	   multiplySC(tmp, result, f);
+	   result = tmp;
+	}
+   }
+}

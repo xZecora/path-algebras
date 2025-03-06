@@ -107,8 +107,10 @@ int main(int argc, char** argv)
    PAElement zeroPA(0);
    myPathAlgebra2.add(sumxy,id_x,id_y);
    PAElement expXplusY;
+   PAElement expXplusYSC;
    PAElement bigMult;
-   //myPathAlgebra2.exponent(expXplusY,sumxy,8);
+   myPathAlgebra2.exponent(expXplusY,sumxy,7);
+   myPathAlgebra2.exponentSC(expXplusY,sumxy,7);
    
    //auto startTime = std::chrono::high_resolution_clock::now();
    //myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
