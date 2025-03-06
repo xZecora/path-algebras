@@ -16,7 +16,7 @@ class PathAlgebra
 public:
   
   friend class SumCollector;
-  friend class PathIDCompare;
+  friend class TermCompare;
 
   PathAlgebra(Graph& graph, Field& field) :
     mGraph(graph),
@@ -54,6 +54,7 @@ public:
   }
 
   void add(PAElement &result, const PAElement &f, const PAElement &g);
+  void addSC(PAElement &result, const PAElement &f, const PAElement &g);
   void subtract(PAElement &result, const PAElement &f, const PAElement &g);
   void negate(PAElement &result, const PAElement& f);
   void negate(PAElement &f);

@@ -16,10 +16,11 @@ public:
    FieldElement(unsigned int element)
      : mElement(element) { }
 
+   FieldElement()
+     : mElement(0) { }
+
    bool isZero(){
-     if(mElement == 0)
-       return true;
-     return false;
+     return (mElement == 0);
    }
 
 

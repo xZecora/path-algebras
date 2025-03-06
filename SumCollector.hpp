@@ -1,18 +1,20 @@
 #pragma once
 
-#include <map>
+#include <queue>
 
 class PathAlgebra;
+class PAElement;
+class Term;
 
-class PathIDCompare {
+class TermCompare {
   private:
   const PathAlgebra& mPathAlgebra;
 
   public:
-  PathIDCompare(const PathAlgebra& pathAlgebra) :
+  TermCompare(const PathAlgebra& pathAlgebra) :
     mPathAlgebra(pathAlgebra) { }
 
-  bool operator()(PathID lhs, PathID rhs) const;
+  bool operator()(Term lhs, Term rhs) const;
 };
 
 
@@ -20,11 +22,23 @@ class SumCollector {
 public:
   SumCollector(const PathAlgebra& pathAlgebra) :
     mPathAlgebra(pathAlgebra),
-    mPathIDCompare(pathAlgebra),
-    mMap(mPathIDCompare) {}
+    mTermCompare(pathAlgebra),
+    mQueue(mTermCompare) {}
+
+  // add or subtract a PAElement to the heap
+  void add(const PAElement& f);
+  void subtract(const PAElement& f);
+  
+  // pop all values from the heap, and return its sum
+  PAElement value();
 
 private:
+
+  // remove all elements from the heap that have the
+  // same PathID as the top
+  Term leadTerm();
+
   const PathAlgebra &mPathAlgebra;
-  PathIDCompare mPathIDCompare;
-  std::map<PathID,FieldElement,PathIDCompare> mMap;
+  TermCompare mTermCompare;
+  std::priority_queue<Term,std::vector<Term>,TermCompare> mQueue;
 };

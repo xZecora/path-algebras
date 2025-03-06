@@ -13,6 +13,19 @@ struct Term
 class PAElement
 {
   friend class PathAlgebra;
+  friend class SumCollector;
+
+private:
+  // read TODO on l61
+  //std::vector<PathID> mPaths;
+  //std::vector<FieldElement> mCoeffs;
+  // MAJOR TODO Is it better to store these as a vector of pairs
+  // vs writing a zipper iterator?
+  std::vector<Term> polynomial;
+  std::vector<Term> combineVectors(std::vector<PathID> paths,
+				   std::vector<FieldElement> coeffs);
+
+
 public:
 
   // read TODO on l61
@@ -61,20 +74,17 @@ public:
   // ConstPAElementIterator cbegin();
   */
 
+  // in the meantime, just expose begin() and end() from polynomial
+  auto begin() -> decltype(polynomial.begin()) { return polynomial.begin(); }
+  auto end() -> decltype(polynomial.end()) { return polynomial.end(); }
+  auto cbegin() const -> decltype(polynomial.cbegin()) { return polynomial.cbegin(); }
+  auto cend() const -> decltype(polynomial.cend()) { return polynomial.cend(); }
+
   long numTerms() { return polynomial.size(); }
   PathID leadTermID() {
     if (numTerms() == 0) return 0;
     return polynomial[0].pathID;
   }
-
-private:
-  // read TODO on l61
-  //std::vector<PathID> mPaths;
-  //std::vector<FieldElement> mCoeffs;
-  // MAJOR TODO Is it better to store these as a vector of pairs vs writing a zipper iterator?
-  std::vector<Term> polynomial;
-  std::vector<Term> combineVectors(std::vector<PathID> paths, std::vector<FieldElement> coeffs);
-
 };
 
 // define (where necessary) pre/postfix ++ operators for Iterators

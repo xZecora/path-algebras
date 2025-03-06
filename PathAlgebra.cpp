@@ -539,3 +539,8 @@ void PathAlgebra::printPathTable() const
   for (auto thisPath : mPathTable.mPathDictionary)
      std::cout << thisPath.printEdgeID() << std::endl;
 }
+
+void PathAlgebra::addSC(PAElement &result, const PAElement &f, const PAElement &g) {
+
+}
+
