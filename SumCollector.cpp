@@ -2,6 +2,7 @@
 #include "PathAlgebra.hpp"
 #include "SumCollector.hpp"
 #include "PAElement.hpp"
+#include <algorithm>
 #include <iostream>
 
 // this checks whether lhs < rhs
