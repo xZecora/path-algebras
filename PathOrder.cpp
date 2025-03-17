@@ -86,7 +86,7 @@ Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const
 
 Compare PathOrder::comparePaths(const Path& path1, const Path& path2) const
 {
-   if(path1.mPathID != -1 && path1.mPathID != -1 && path1.mPathID == path2.mPathID)
+   if(path1.mPathID != -1 && path2.mPathID != -1 && path1.mPathID == path2.mPathID)
      return Compare::EQ;
 
    if (mHasWeights)
