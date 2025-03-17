@@ -2,11 +2,12 @@
 #include "PathAlgebra.hpp"
 #include "SumCollector.hpp"
 #include "PAElement.hpp"
-#include <algorithm>
 #include <iostream>
 
+long long TermCompare::totalTime = 0;
+
 // this checks whether lhs < rhs
-bool TermCompare::operator()(Term lhs, Term rhs) const
+bool TermCompare::operator()(Term lhs, Term rhs)
 {
   // assume that lhs and rhs != 1 error otherwise...
   //if(lhs.mPathID != -1 || rhs.mPathID != -1)
@@ -14,8 +15,13 @@ bool TermCompare::operator()(Term lhs, Term rhs) const
       
   //}
   auto pathDict = mPathAlgebra.mPathTable.pathDictionary();
-  return (mPathAlgebra.mPathOrder.comparePaths(pathDict[lhs.pathID],
+  //auto startTime = std::chrono::high_resolution_clock::now();
+  bool retVal = (mPathAlgebra.mPathOrder.comparePaths(pathDict[lhs.pathID],
 					       pathDict[rhs.pathID]) == Compare::LT);
+  //auto endTime = std::chrono::high_resolution_clock::now();
+  //auto duration = duration_cast<std::chrono::nanoseconds>(endTime-startTime);
+  //totalTime += duration.count();
+  return retVal;
 }
 
 void SumCollector::add(const PAElement& f)

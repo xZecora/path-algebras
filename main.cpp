@@ -34,7 +34,8 @@ int main(int argc, char** argv)
    std::cout << std::endl << std::flush;
 
    PathAlgebra myPathAlgebra(myGraph, myField, myPathOrder);
-   PathAlgebra myPathAlgebra2(myGraph2, myField, pathOrder2);
+   // PathAlgebra myPathAlgebra2(myGraph2, myField, pathOrder2);
+   PathAlgebra myPathAlgebra2(myGraph2, myField);
 
    Path myPath(0,0,{0,0,0,0,0});
    Path myPath2(1,2,{0,1,2,3,4});   // not a valid path... should we error?

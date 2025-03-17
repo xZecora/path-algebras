@@ -111,13 +111,14 @@ void PathAlgebra::add(PAElement &result, const std::vector<PAElement> &vec) {
   assert(result.polynomial.size() == 0);
 
   PAElement accum;
+  PAElement temp;
   for (auto f : vec)
   {
-    PAElement temp;
+    temp.polynomial.clear();
     add(temp,f,accum);
-    accum = temp;  // TODO: fast way of moving memory from one to another
+    accum.polynomial.swap(temp.polynomial);
   }
-  result = accum;  // TODO: also use memory move
+  result.polynomial.swap(accum.polynomial);
 }
 
 
@@ -201,7 +202,7 @@ void PathAlgebra::multiplyShortLeft(PAElement &result, const PAElement &shortPol
    add(result,tempVec);
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count()/1000 << "ms" << std::endl << std::flush;
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
@@ -218,7 +219,7 @@ void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPol
    add(result,tempVec);
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count()/1000 << "ms" << std::endl << std::flush;
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const FieldElement &c, const PAElement &f)
@@ -562,13 +563,12 @@ void PathAlgebra::multiplyShortLeftSC(PAElement &result, const PAElement &shortP
       tempVec.push_back(tempElt);
    }
    auto startTime = std::chrono::high_resolution_clock::now();
-   std::cout << "Starting SumCollector" << std::endl << std::flush;
    sumCollector.add(tempVec);
    result = sumCollector.value();
-   std::cout << "Finished SumCollector" << std::endl << std::flush;
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count()/1000 << "ms" << std::endl << std::flush;
+   sumCollector.printTime(std::cout);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::multiplyShortRightSC(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
@@ -587,7 +587,8 @@ void PathAlgebra::multiplyShortRightSC(PAElement &result, const PAElement &longP
    result = sumCollector.value();
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count()/1000 << "ms" << std::endl << std::flush;
+   sumCollector.printTime(std::cout);
+   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
