@@ -23,10 +23,10 @@ int main(int argc, char** argv)
    //Graph myGraph({{1,2,3},{1,2,3},{1,2,3}});
 
    Graph myGraph({{1,1,0},{0,1,1},{0,0,1}}, {"vertex1", "vertex2", "vertex3"}, {"edge1", "edge2", "edge3", "edge4", "edge5"});
-   Graph myGraph2({ std::vector<int> {2} }, {"v0"}, {"x","y"});
+   Graph myGraph2({ std::vector<int> {3} }, {"v0"}, {"x","y","z"});
 
    std::vector<WeightVector> weights = {{1},{2},{3},{2},{1}};
-   std::vector<WeightVector> weights2 = {{1},{1}};
+   std::vector<WeightVector> weights2 = {{1},{1},{1}};
 
    PathOrder myPathOrder(weights);
    PathOrder pathOrder2(weights2);
@@ -75,6 +75,7 @@ int main(int argc, char** argv)
 
    Path path_x(0,0,{0});
    Path path_y(0,0,{1});
+   Path path_z(0,0,{2});
    Path vert(0);
 
    // should make PathAlgebra method which takes a path and
@@ -82,6 +83,7 @@ int main(int argc, char** argv)
    // insertInDictionary?
    PathID id_x = myPathAlgebra2.multiplyPaths(vert,path_x);  
    PathID id_y = myPathAlgebra2.multiplyPaths(vert,path_y);
+   PathID id_z = myPathAlgebra2.multiplyPaths(vert,path_z);
    PathID id_vert = myPathAlgebra2.multiplyPaths(vert,vert);
    PathID id_x2 = myPathAlgebra2.multiplyPaths(id_x,id_x);
    PathID id_xy = myPathAlgebra2.multiplyPaths(id_x,id_y);
@@ -112,6 +114,8 @@ int main(int argc, char** argv)
    PAElement bigMult;
    myPathAlgebra2.exponent(expXplusY,sumxy,7);
    myPathAlgebra2.exponentSC(expXplusY,sumxy,7);
+
+   std::vector<PAElement>
    
    //auto startTime = std::chrono::high_resolution_clock::now();
    //myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
