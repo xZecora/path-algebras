@@ -72,6 +72,17 @@ public:
   {
   }
 
+  Path(int startingAt, Path original, int upTo, VertexID start, VertexID end)
+    : mIsZero(original.mIsZero),
+      mIsVertex(original.mIsVertex),
+      mStartVertex(start),
+      mEndVertex(end)
+  {
+    mPath = std::vector<EdgeID>(original.begin() + startingAt, original.begin() + upTo);
+
+    mStartVertex = original.mPath[startingAt];
+  }
+
   const std::vector<EdgeID>& getPathList() const
   {
     return this->mPath;

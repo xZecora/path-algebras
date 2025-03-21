@@ -34,6 +34,9 @@ public:
     this->polynomial = combineVectors(paths, coeffs);
   }
 
+  PAElement(std::vector<Term> &polynomial) : 
+    polynomial(polynomial) {};
+
   // read TODO on l61
   PAElement(PathID path, FieldElement coeff) //: 
     //mPaths({path}),
@@ -49,6 +52,15 @@ public:
     //mCoeffs({FieldElement { 1 }})
   {
     this->polynomial = combineVectors({path}, {FieldElement { 1 }});
+  }
+
+  // a slice constructor
+  PAElement(int startingAt, PAElement original, int upTo)
+  {
+    if(upTo == 0)
+      this->polynomial = std::vector<Term>(original.polynomial.begin() + startingAt, original.polynomial.end());
+    else
+      this->polynomial = std::vector<Term>(original.polynomial.begin() + startingAt, original.polynomial.begin() + upTo);
   }
 
   PAElement() = default;
@@ -80,10 +92,16 @@ public:
   auto cbegin() const -> decltype(polynomial.cbegin()) { return polynomial.cbegin(); }
   auto cend() const -> decltype(polynomial.cend()) { return polynomial.cend(); }
 
-  long numTerms() { return polynomial.size(); }
-  PathID leadTermID() {
+  long numTerms() const{ return polynomial.size(); }
+
+  PathID leadPathID() const{
     if (numTerms() == 0) return 0;
     return polynomial[0].pathID;
+  }
+
+  const Term leadTerm() const{
+    if (numTerms() == 0) return {0, -1};
+    return polynomial[0];
   }
 };
 

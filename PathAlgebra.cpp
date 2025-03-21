@@ -462,7 +462,7 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
     std::pair<int, int> subword = isAnySubword(divisorLTs, curDividend.polynomial[0].pathID);
     if(subword != (std::pair<int,int>){-1,-1}){
       // build prefix + suffix from curDividend.polynomial[0].pathID
-      auto curLTID = curDividend.leadTermID();
+      auto curLTID = curDividend.leadPathID();
       auto curLeadTerm = mPathTable.mPathDictionary[curLTID];
       auto foundPath = mPathTable.mPathDictionary[divisorLTs[subword.second]];
       auto preEnd = curLeadTerm.begin() + subword.first;
@@ -524,15 +524,16 @@ int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
   return -1;
 }
 
-int PathAlgebra::findOverlap(const PathID& prefix, const PathID& suffix){
+std::vector<int> PathAlgebra::findOverlaps(const PathID& prefix, const PathID& suffix) const{
+  std::vector<int> locations = {};
   for (int i = 0; i < mPathTable.mPathDictionary[prefix].length(); i++){
     if((mPathTable.mPathDictionary[prefix].length()-i) <= mPathTable.mPathDictionary[suffix].length() &&
        std::equal(mPathTable.mPathDictionary[suffix].mPath.begin(),
                   mPathTable.mPathDictionary[suffix].mPath.begin()+(mPathTable.mPathDictionary[prefix].length()-i),
                   mPathTable.mPathDictionary[prefix].mPath.begin()+i))
-      return i;
+      locations.push_back(i);
   }
-  return -1;
+  return locations;
 }
 
 void PathAlgebra::printPathTable() const
@@ -610,4 +611,82 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
 	   result = tmp;
 	}
    }
+}
+
+std::vector<OverlapInfo> PathAlgebra::Buchbergers_processOverlaps(const std::vector<PAElement> &list, const int &leftIndex, const int &rightIndex){
+  PathID firstLT = list[leftIndex].polynomial[0].pathID;
+  PathID secondLT = list[rightIndex].polynomial[0].pathID;
+
+  std::vector<int> overlapLocations = findOverlaps(firstLT, secondLT);
+
+  std::vector<OverlapInfo> overlaps;
+
+  for(auto overlap : overlapLocations){
+    overlaps.push_back({leftIndex, rightIndex, overlap, list[rightIndex].polynomial.size()+overlap});
+  }
+  return overlaps;
+}
+
+PAElement PathAlgebra::divideOverlap(std::vector<PAElement> divisors, OverlapInfo dividend){
+  Path leftProduct = Path(mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mPath.size()-dividend.overlapSize, mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()], 0, mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mEndVertex, mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()].mEndVertex);
+
+  Path rightProduct = Path(0, mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()], dividend.overlapLocation, mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mStartVertex, mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()].mStartVertex);
+
+  PAElement leftPoly;
+  rightMultiply(leftPoly, divisors[dividend.leftIndex], leftProduct);
+  PAElement rightPoly;
+  leftMultiply(rightPoly, rightProduct, divisors[dividend.rightIndex]);
+
+  PAElement sPol;
+  subtract(sPol, leftPoly, rightPoly);
+
+  return dividePAElement(divisors, sPol);
+}
+
+
+std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &generators, int maximiumDegree, int maximumSize) {
+  std::vector<PAElement> newGenerators = generators;
+
+  std::priority_queue<OverlapInfo, std::vector<OverlapInfo>, OverlapCompare> overlapQueue;
+  size_t generatorSize = 0;
+
+
+  for(int i = 0; i < newGenerators.size(); i++){ // iterate over the generator list fully
+    for(int j = 0; j < newGenerators.size(); j++){ // iterate over the generator list up to the outer loops position
+      std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
+      for(auto overlap : newOverlaps)
+        overlapQueue.push(overlap);
+    }
+  }
+
+  generatorSize = newGenerators.size();
+  while(!overlapQueue.empty() && (newGenerators.size() < maximumSize || maximumSize == 0)){
+    // generatorSize is the amount we had on the last run, whereas size is the current amount
+    // every index between those two numbers is a new generator (should only be one per iteration,
+    // iterate over the entire list of generators, including new ones
+    for(int i = 0; i < newGenerators.size(); i++){
+      // if our current generator is an old one, we only want to check it against new ones, to remove redundancy
+      if(i < generatorSize){
+        for(int j = generatorSize; j < newGenerators.size(); j++){
+          std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
+          for(auto overlap : newOverlaps)
+            overlapQueue.push(overlap);
+        }
+      // if our current generator is an new one, we only want to check it against old ones, to remove redundancy
+      } else {
+        for(int j = 0; j < generatorSize; j++){
+          std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
+          for(auto overlap : newOverlaps)
+            overlapQueue.push(overlap);
+        }
+      }
+    } 
+    // set generatorSize to be the current size before adding something new.
+    generatorSize = newGenerators.size();
+    PAElement remainder = divideOverlap(newGenerators, overlapQueue.top());
+    if(remainder.polynomial.size() > 0)
+      newGenerators.push_back(remainder);
+  }
+
+  return newGenerators;
 }

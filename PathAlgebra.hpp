@@ -11,6 +11,31 @@
 #include <vector>
 #include <iostream>
 
+struct OverlapInfo {
+  int leftIndex, rightIndex;
+  int overlapLocation;
+  size_t overlapSize;
+  //std::vector<EdgeID> prefix, suffix;
+};
+
+class OverlapCompare {
+  public:
+  // Sorted by size, left term, right term, and overlapLocation, in that order.
+  // If all these things are equal, it is the same overlap.
+  bool operator()(OverlapInfo lhs, OverlapInfo rhs) {
+    if(lhs.overlapSize == rhs.overlapSize)
+      if(lhs.leftIndex == rhs.leftIndex)
+        if(lhs.rightIndex == rhs.rightIndex)
+          return lhs.overlapLocation <= rhs.overlapLocation;
+        else
+          return lhs.rightIndex <= rhs.rightIndex;
+      else
+        return lhs.leftIndex <= rhs.leftIndex;
+    else
+      return lhs.overlapSize <= rhs.overlapSize;
+  }
+};
+
 class PathAlgebra
 {
 public:
@@ -44,7 +69,7 @@ public:
   int isSubword(const PathID& subPathID, const PathID& superPathID);
   // return (i,j) where subword j in subDict is found in position i of word.
   std::pair<int,int> isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID);
-  int findOverlap(const PathID& prefix, const PathID& suffix);
+  std::vector<int> findOverlaps(const PathID& prefix, const PathID& suffix) const;
 
   void addToPathTable(Path& path)
   {
@@ -64,6 +89,14 @@ public:
   void printPAElementByPathID(std::ostream& ostr, const PAElement &f);
 
   void printPathTable() const;
+
+  std::vector<PAElement> Buchbergers(const std::vector<PAElement> &generators, int maximiumDegree, int maximumSize = 0);
+  std::pair<PAElement,PAElement> Buchbergers_prefix_suffix(const PAElement &first, const PAElement &second);
+  std::vector<OverlapInfo> Buchbergers_processOverlaps(const std::vector<PAElement> &list, const int &leftIndex, const int &rightIndex);
+
+  PAElement divideOverlap(std::vector<PAElement> divisors, OverlapInfo dividend);
+
+  PAElement Buchbergers_leftMultiply(const std::vector<EdgeID> &p, const FieldElement &c, const PAElement &f);
 
 private:
   void add(PAElement &result, const std::vector<PAElement>& vec);
