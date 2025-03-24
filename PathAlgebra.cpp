@@ -481,8 +481,8 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
       remainder.polynomial.push_back(curDividend.polynomial[0]);
       curDividend.polynomial.erase(curDividend.polynomial.begin());
     }
-    printPAElementByLabel(std::cout, curDividend);
-    std::cout << std::endl << std::flush;
+    //printPAElementByLabel(std::cout, curDividend);
+    //std::cout << std::endl << std::flush;
   }
   return remainder;
 }
@@ -526,8 +526,10 @@ int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
 
 std::vector<int> PathAlgebra::findOverlaps(const PathID& prefix, const PathID& suffix) const{
   std::vector<int> locations = {};
-  for (int i = 0; i < mPathTable.mPathDictionary[prefix].length(); i++){
-    if((mPathTable.mPathDictionary[prefix].length()-i) <= mPathTable.mPathDictionary[suffix].length() &&
+  // starting at i = 1 so as to not look for full prefixes
+  for (int i = 1; i < mPathTable.mPathDictionary[prefix].length(); i++){
+    // changed to strict here to not look for full suffixes
+    if((mPathTable.mPathDictionary[prefix].length()-i) < mPathTable.mPathDictionary[suffix].length() &&
        std::equal(mPathTable.mPathDictionary[suffix].mPath.begin(),
                   mPathTable.mPathDictionary[suffix].mPath.begin()+(mPathTable.mPathDictionary[prefix].length()-i),
                   mPathTable.mPathDictionary[prefix].mPath.begin()+i))
@@ -667,16 +669,24 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
     for(int j = 0; j < newGenerators.size(); j++){ // iterate over the generator list up to the outer loops position
       std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
       for(auto overlap : newOverlaps)
-        overlapQueue.push(overlap);
+      {
+	std::cout << "(" << overlap.leftIndex << "," << overlap.rightIndex << "," << overlap.overlapSize << "," << overlap.overlapLocation << ")" << std::endl << std::flush;
+	overlapQueue.push(overlap);
+      }
     }
   }
 
+  //auto topOv = overlapQueue.top();
+  //std::cout << "(" << topOv.leftIndex << "," << topOv.rightIndex << "," << topOv.overlapSize << "," << topOv.overlapLocation << ")" << std::endl << std::flush;
+
   while(!overlapQueue.empty() && (newGenerators.size() < maximumSize || maximumSize == 0)){
+    std::cout << "OverlapQueue size: " << overlapQueue.size() << std::endl << std::flush;
     PAElement remainder = divideOverlap(newGenerators, overlapQueue.top());
     overlapQueue.pop();
     if(remainder.polynomial.size() > 0)
     {
       size_t newIndex = newGenerators.size();
+      makeMonic(remainder);
       newGenerators.push_back(remainder);
       for(int i = 0; i < newIndex; i++)
       {
@@ -713,4 +723,12 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
     } 
 
   return newGenerators;
+}
+
+void PathAlgebra::makeMonic(PAElement& f) const
+{
+  if (f.polynomial.size() == 0) return;
+  FieldElement leadCoeffInv = mField.invert(f.polynomial[0].coeff);
+  for (Term& t : f.polynomial)
+    t.coeff = mField.multiply(t.coeff,leadCoeffInv);
 }

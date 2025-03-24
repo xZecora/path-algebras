@@ -26,13 +26,13 @@ class OverlapCompare {
     if(lhs.overlapSize == rhs.overlapSize)
       if(lhs.leftIndex == rhs.leftIndex)
         if(lhs.rightIndex == rhs.rightIndex)
-          return lhs.overlapLocation <= rhs.overlapLocation;
+          return lhs.overlapLocation >= rhs.overlapLocation;
         else
-          return lhs.rightIndex <= rhs.rightIndex;
+          return lhs.rightIndex >= rhs.rightIndex;
       else
-        return lhs.leftIndex <= rhs.leftIndex;
+        return lhs.leftIndex >= rhs.leftIndex;
     else
-      return lhs.overlapSize <= rhs.overlapSize;
+      return lhs.overlapSize >= rhs.overlapSize;
   }
 };
 
@@ -84,6 +84,8 @@ public:
   void multiplySC(PAElement &result, const PAElement &f, const PAElement &g);
   void exponent(PAElement &result, const PAElement &f, long n);
   void exponentSC(PAElement &result, const PAElement &f, long n);
+
+  void makeMonic(PAElement& result) const;
 
   void printPAElementByLabel(std::ostream& ostr, const PAElement &f);
   void printPAElementByPathID(std::ostream& ostr, const PAElement &f);

@@ -29,8 +29,8 @@ private:
 public:
 
   // read TODO on l61
-  PAElement(std::vector<PathID> &paths,
-	    std::vector<FieldElement> &coeffs) {
+  PAElement(const std::vector<PathID> &paths,
+	    const std::vector<FieldElement> &coeffs) {
     this->polynomial = combineVectors(paths, coeffs);
   }
 
