@@ -116,8 +116,8 @@ int main(int argc, char** argv)
    PAElement elt_comm_y_z;
    PAElement toReduce;
    PAElement f1({id_x2,id_yz,id_zy},{FieldElement(1),FieldElement(3),FieldElement(7)});
-   PAElement f2({id_xz,id_y2,id_zx},{FieldElement(1),FieldElement(29),FieldElement(87)});
-   PAElement f3({id_xy,id_yx,id_z2},{FieldElement(1),FieldElement(36),FieldElement(34)});
+   PAElement f2({id_xy,id_yx,id_z2},{FieldElement(1),FieldElement(36),FieldElement(34)});
+   PAElement f3({id_xz,id_y2,id_zx},{FieldElement(1),FieldElement(29),FieldElement(87)});
    myPathAlgebra2.subtract(elt_comm_x_y,elt_xy,elt_yx);
    myPathAlgebra2.subtract(elt_comm_x_z,elt_xz,elt_zx);
    myPathAlgebra2.subtract(elt_comm_y_z,elt_yz,elt_zy);

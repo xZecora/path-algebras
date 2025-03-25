@@ -78,9 +78,9 @@ public:
       mStartVertex(start),
       mEndVertex(end)
   {
-    mPath = std::vector<EdgeID>(original.begin() + startingAt, original.begin() + upTo);
-
-    mStartVertex = original.mPath[startingAt];
+    auto howFar = (upTo == 0) ? original.end() : original.begin() + upTo;
+    mPath = std::vector<EdgeID>(original.begin() + startingAt, howFar);
+    //mStartVertex = original.mPath[startingAt];
   }
 
   const std::vector<EdgeID>& getPathList() const

@@ -458,6 +458,10 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
   for(auto itr : divisors)
     divisorLTs.push_back(itr.polynomial[0].pathID);
 
+  std::cout << "Dividing: ";
+  printPAElementByLabel(std::cout, curDividend);
+  std::cout << std::endl << std::flush;
+
   while(curDividend.polynomial.size() != 0){
     std::pair<int, int> subword = isAnySubword(divisorLTs, curDividend.polynomial[0].pathID);
     if(subword != (std::pair<int,int>){-1,-1}){
@@ -481,9 +485,13 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
       remainder.polynomial.push_back(curDividend.polynomial[0]);
       curDividend.polynomial.erase(curDividend.polynomial.begin());
     }
-    //printPAElementByLabel(std::cout, curDividend);
-    //std::cout << std::endl << std::flush;
+    std::cout << "Dividing: ";
+    printPAElementByLabel(std::cout, curDividend);
+    std::cout << std::endl << std::flush;
   }
+  std::cout << "Result: ";
+  printPAElementByLabel(std::cout, remainder);
+  std::cout << std::endl << std::flush;
   return remainder;
 }
 
@@ -621,6 +629,7 @@ std::vector<OverlapInfo> PathAlgebra::Buchbergers_processOverlaps(const std::vec
   PathID firstLT = list[leftIndex].polynomial[0].pathID;
   PathID secondLT = list[rightIndex].polynomial[0].pathID;
 
+  size_t firstLen = mPathTable.mPathDictionary[firstLT].mPath.size();
   size_t secondLen = mPathTable.mPathDictionary[secondLT].mPath.size();
 
   std::vector<int> overlapLocations = findOverlaps(firstLT, secondLT);
@@ -628,33 +637,35 @@ std::vector<OverlapInfo> PathAlgebra::Buchbergers_processOverlaps(const std::vec
   std::vector<OverlapInfo> overlaps;
 
   for(auto overlap : overlapLocations){
-    overlaps.push_back({leftIndex, rightIndex, overlap, secondLen + overlap});
+    overlaps.push_back({leftIndex, rightIndex, overlap, secondLen + overlap, firstLen - overlap});
   }
   return overlaps;
 }
 
 PAElement PathAlgebra::divideOverlap(std::vector<PAElement> divisors, OverlapInfo dividend){
-  Path leftProduct = Path(mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mPath.size()-dividend.overlapSize,
+  Path rightFactor = Path(dividend.overlapSize,
                           mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()],
-                          0,
+                          0,  // 0 here means copy until the end
                           mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mEndVertex,
                           mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()].mEndVertex);
 
-  Path rightProduct = Path(0,
-			   mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()],
-			   dividend.overlapLocation,
-			   mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mStartVertex,
-			   mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()].mStartVertex);
+  Path leftFactor = Path(0,
+			 mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()],
+			 dividend.overlapLocation,
+			 mPathTable.mPathDictionary[divisors[dividend.leftIndex].leadPathID()].mStartVertex,
+			 mPathTable.mPathDictionary[divisors[dividend.rightIndex].leadPathID()].mStartVertex);
 
   PAElement leftPoly;
-  rightMultiply(leftPoly, divisors[dividend.leftIndex], leftProduct);
+  rightMultiply(leftPoly, divisors[dividend.leftIndex], rightFactor);
   PAElement rightPoly;
-  leftMultiply(rightPoly, rightProduct, divisors[dividend.rightIndex]);
+  leftMultiply(rightPoly, leftFactor, divisors[dividend.rightIndex]);
 
   PAElement sPol;
   subtract(sPol, leftPoly, rightPoly);
 
-  return dividePAElement(divisors, sPol);
+  PAElement result = dividePAElement(divisors, sPol);
+
+  return result;
 }
 
 
@@ -670,14 +681,15 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
       std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
       for(auto overlap : newOverlaps)
       {
-	std::cout << "(" << overlap.leftIndex << "," << overlap.rightIndex << "," << overlap.overlapSize << "," << overlap.overlapLocation << ")" << std::endl << std::flush;
+	std::cout << "(" << overlap.leftIndex << ","
+		         << overlap.rightIndex << ","
+		         << overlap.overlapLocation << ","
+		         << overlap.lcmSize << ","
+		         << overlap.overlapSize << ")" << std::endl << std::flush;
 	overlapQueue.push(overlap);
       }
     }
   }
-
-  //auto topOv = overlapQueue.top();
-  //std::cout << "(" << topOv.leftIndex << "," << topOv.rightIndex << "," << topOv.overlapSize << "," << topOv.overlapLocation << ")" << std::endl << std::flush;
 
   while(!overlapQueue.empty() && (newGenerators.size() < maximumSize || maximumSize == 0)){
     std::cout << "OverlapQueue size: " << overlapQueue.size() << std::endl << std::flush;
@@ -728,7 +740,8 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
 void PathAlgebra::makeMonic(PAElement& f) const
 {
   if (f.polynomial.size() == 0) return;
-  FieldElement leadCoeffInv = mField.invert(f.polynomial[0].coeff);
+  FieldElement leadCoeff = f.polynomial[0].coeff;
+  FieldElement leadCoeffInv = mField.invert(leadCoeff);
   for (Term& t : f.polynomial)
     t.coeff = mField.multiply(t.coeff,leadCoeffInv);
 }

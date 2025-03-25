@@ -69,6 +69,7 @@ public:
    inline FieldElement negate(FieldElement a)
    {
      //return this->subtract(FieldElement(0), a);
+     if (a.mElement == 0) return a;
      return FieldElement(mCharacteristic - a.mElement);
    }
 

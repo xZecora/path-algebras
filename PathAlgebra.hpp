@@ -14,6 +14,7 @@
 struct OverlapInfo {
   int leftIndex, rightIndex;
   int overlapLocation;
+  size_t lcmSize;
   size_t overlapSize;
   //std::vector<EdgeID> prefix, suffix;
 };
@@ -23,7 +24,7 @@ class OverlapCompare {
   // Sorted by size, left term, right term, and overlapLocation, in that order.
   // If all these things are equal, it is the same overlap.
   bool operator()(OverlapInfo lhs, OverlapInfo rhs) {
-    if(lhs.overlapSize == rhs.overlapSize)
+    if(lhs.lcmSize == rhs.lcmSize)
       if(lhs.leftIndex == rhs.leftIndex)
         if(lhs.rightIndex == rhs.rightIndex)
           return lhs.overlapLocation >= rhs.overlapLocation;
@@ -32,7 +33,7 @@ class OverlapCompare {
       else
         return lhs.leftIndex >= rhs.leftIndex;
     else
-      return lhs.overlapSize >= rhs.overlapSize;
+      return lhs.lcmSize >= rhs.lcmSize;
   }
 };
 
