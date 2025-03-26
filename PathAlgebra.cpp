@@ -426,7 +426,7 @@ PAElement PathAlgebra::divisionAlgorithm_subtract(const PAElement& f, const PAEl
 	      ++git;
 	      break;
       case Compare::EQ:
-              FieldElement diff = mField.subtract(fit->coeff,git->coeff);
+	      FieldElement diff = mField.subtract(fit->coeff,git->coeff);
               // if our sum is 0, then we dont want to add it and just want to move on.
               if(!diff.isZero())
 	        result.polynomial.push_back({diff ,fit->pathID});
@@ -458,9 +458,9 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
   for(auto itr : divisors)
     divisorLTs.push_back(itr.polynomial[0].pathID);
 
-  std::cout << "Dividing: ";
-  printPAElementByLabel(std::cout, curDividend);
-  std::cout << std::endl << std::flush;
+  //std::cout << "Dividing: ";
+  //printPAElementByLabel(std::cout, curDividend);
+  //std::cout << std::endl << std::flush;
 
   while(curDividend.polynomial.size() != 0){
     std::pair<int, int> subword = isAnySubword(divisorLTs, curDividend.polynomial[0].pathID);
@@ -485,13 +485,13 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
       remainder.polynomial.push_back(curDividend.polynomial[0]);
       curDividend.polynomial.erase(curDividend.polynomial.begin());
     }
-    std::cout << "Dividing: ";
-    printPAElementByLabel(std::cout, curDividend);
-    std::cout << std::endl << std::flush;
+    //std::cout << "Dividing: ";
+    //printPAElementByLabel(std::cout, curDividend);
+    //std::cout << std::endl << std::flush;
   }
-  std::cout << "Result: ";
-  printPAElementByLabel(std::cout, remainder);
-  std::cout << std::endl << std::flush;
+  //std::cout << "Result: ";
+  //printPAElementByLabel(std::cout, remainder);
+  //std::cout << std::endl << std::flush;
   return remainder;
 }
 
@@ -692,7 +692,7 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
   }
 
   while(!overlapQueue.empty() && (newGenerators.size() < maximumSize || maximumSize == 0)){
-    std::cout << "OverlapQueue size: " << overlapQueue.size() << std::endl << std::flush;
+    // std::cout << "OverlapQueue size: " << overlapQueue.size() << std::endl << std::flush;
     PAElement remainder = divideOverlap(newGenerators, overlapQueue.top());
     overlapQueue.pop();
     if(remainder.polynomial.size() > 0)

@@ -44,7 +44,10 @@ public:
 
    inline FieldElement subtract(FieldElement a, FieldElement b)
    {
-      return FieldElement {(a.mElement - b.mElement) % mCharacteristic};
+      if (a.mElement >= b.mElement)
+	return FieldElement {a.mElement - b.mElement};
+      else
+	return negate(FieldElement {b.mElement - a.mElement});
    }
 
    inline FieldElement multiply(FieldElement a, FieldElement b)

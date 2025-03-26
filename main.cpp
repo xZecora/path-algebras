@@ -133,7 +133,13 @@ int main(int argc, char** argv)
 	std::cout << std::endl << std::flush;
    }
 
-   auto sklyGensGB = myPathAlgebra2.Buchbergers(sklyGens, 5, 5);
+   auto startTime = std::chrono::high_resolution_clock::now();
+   auto sklyGensGB = myPathAlgebra2.Buchbergers(sklyGens, 30, 30);
+   auto endTime = std::chrono::high_resolution_clock::now();
+
+   auto duration = duration_cast<std::chrono::milliseconds>(endTime-startTime);
+   std::cout << "Duration for Sklyanin GB: " << duration.count() << "ms" << std::endl;
+
    for (auto f : sklyGensGB)
    {
         myPathAlgebra2.printPAElementByLabel(std::cout, f);
