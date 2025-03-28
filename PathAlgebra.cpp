@@ -623,6 +623,22 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
    }
 }
 
+void PathAlgebra::powers_of_2_exponent(PAElement &result, const PAElement &f, long n) {
+  for(int i=sizeof(long);i>=0;i--){
+  PAElement holder = f;
+    if(n >> i & 1){
+      PAElement temp;
+      for(int j=0;j<n;j++){
+        PAElement currpw;
+	      multiply(currpw, holder, holder);
+        holder = currpw;
+      }
+      multiply(temp, result, holder);
+      result = temp;
+    }
+  }
+}
+
 std::vector<OverlapInfo> PathAlgebra::Buchbergers_processOverlaps(const std::vector<PAElement> &list,
 								  const int &leftIndex,
 								  const int &rightIndex){

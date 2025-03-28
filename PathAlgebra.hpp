@@ -84,6 +84,7 @@ public:
   void multiply(PAElement &result, const PAElement &f, const PAElement &g);
   void multiplySC(PAElement &result, const PAElement &f, const PAElement &g);
   void exponent(PAElement &result, const PAElement &f, long n);
+  void powers_of_2_exponent(PAElement &result, const PAElement &f, long n);
   void exponentSC(PAElement &result, const PAElement &f, long n);
 
   void makeMonic(PAElement& result) const;
