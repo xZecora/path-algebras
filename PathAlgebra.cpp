@@ -625,16 +625,19 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
 
 void PathAlgebra::powers_of_2_exponent(PAElement &result, const PAElement &f, long n) {
   PAElement currpw = f;
-  for(int i=0; i < 8*sizeof(long) && (n >> i) != 0;i--){
-    PAElement tmp;
-	  multiply(tmp, currpw, currpw);
-    currpw = tmp;
-
+  PAElement result = one();
+  for(int i=0; i < 8*sizeof(long);i++){
+    PAElement tmp, temp;
     if(n >> i & 1){
-      PAElement temp;
       multiply(temp, result, currpw);
       result = temp;
     }
+    if (n >> (i+1) != 0)
+    {
+      multiply(tmp, currpw, currpw);
+      currpw = tmp;
+    }
+    else break;
   }
 
   /*
