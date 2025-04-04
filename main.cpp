@@ -150,10 +150,17 @@ int main(int argc, char** argv)
    PAElement zeroPA(0);
    myPathAlgebra2.add(sumxy,id_x,id_y);
    PAElement expXplusY;
+   PAElement expXplusY2;
    PAElement expXplusYSC;
    PAElement bigMult;
-   myPathAlgebra2.exponent(expXplusY,sumxy,7);
-   myPathAlgebra2.exponentSC(expXplusY,sumxy,7);
+   myPathAlgebra2.exponent(expXplusY,sumxy,2);
+   myPathAlgebra2.powers_of_2_exponent(expXplusY2,sumxy,2);
+
+   //bool areEqual = (expXplusY == expXplusY2);
+   //if (areEqual) std::cout << "Exponents are equal." << std::endl;
+   //else std::cout << "Exponents not equal." << std::endl;
+   
+   myPathAlgebra2.exponentSC(expXplusYSC,sumxy,7);
 
    //auto startTime = std::chrono::high_resolution_clock::now();
    //myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
@@ -174,10 +181,17 @@ int main(int argc, char** argv)
    std::cout << std::endl;
    myPathAlgebra2.printPAElementByPathID(std::cout, zeroPA);
    std::cout << std::endl;
-   //myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY);
-   //std::cout << std::endl;
+   std::cout << "one: ";
+   myPathAlgebra2.printPAElementByLabel(std::cout, myPathAlgebra2.one());
+   std::cout << std::endl;
+   std::cout << "orig code: ";
+   myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY);
+   std::cout << std::endl;
+   std::cout << "pow2 code: ";
+   myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY2);
+   std::cout << std::endl;
 
-   myPathAlgebra2.printPathTable();
+   //myPathAlgebra2.printPathTable();
 
    auto myPair = myPathAlgebra2.isAnySubword({id_x}, id_xy);
    std::cout << myPair.first << " " << myPair.second << std::endl;

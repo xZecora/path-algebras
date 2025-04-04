@@ -61,13 +61,13 @@ public:
       if(i+1 == path.getPathList().size()){
         output.append(edgeList[itr].edgeLabel);
       } else {
-        //output.append(edgeList[itr].edgeLabel + ", ");
         output.append(edgeList[itr].edgeLabel + "*");
-        //output.append(edgeList[itr].edgeLabel);
       }
       i++;
     }
-    if (i == 0) output.append(vertexList[path.getStartVertex()].vertexLabel);
+    if (i == 0) {
+      output.append(vertexList[path.getStartVertex()].vertexLabel);
+    }
     return output;
   }
 

@@ -8,6 +8,10 @@ struct Term
 {
   FieldElement coeff;
   PathID pathID;
+
+  bool operator==(const Term& rhs) const {
+    return (pathID == rhs.pathID) && (coeff == rhs.coeff);
+  }
 };
 
 class PAElement
@@ -102,6 +106,10 @@ public:
   const Term leadTerm() const{
     if (numTerms() == 0) return {0, -1};
     return polynomial[0];
+  }
+  
+  bool operator==(const PAElement& rhs) const {
+    return (polynomial == rhs.polynomial);
   }
 };
 

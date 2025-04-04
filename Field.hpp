@@ -22,8 +22,8 @@ public:
    bool isZero(){
      return (mElement == 0);
    }
-
-
+  
+  bool operator==(const FieldElement& rhs) const { return mElement == rhs.mElement; }
 private:
   unsigned int mElement;
 };
