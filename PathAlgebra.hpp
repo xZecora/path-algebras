@@ -77,6 +77,8 @@ public:
     this->mPathTable.addToTable(path);
   }
 
+  PAElement one();
+
   void add(PAElement &result, const PAElement &f, const PAElement &g);
   void subtract(PAElement &result, const PAElement &f, const PAElement &g);
   void negate(PAElement &result, const PAElement& f);

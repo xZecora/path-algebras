@@ -625,7 +625,7 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
 
 void PathAlgebra::powers_of_2_exponent(PAElement &result, const PAElement &f, long n) {
   PAElement currpw = f;
-  PAElement result = one();
+  result = one();
   for(int i=0; i < 8*sizeof(long);i++){
     PAElement tmp, temp;
     if(n >> i & 1){
@@ -778,4 +778,14 @@ void PathAlgebra::makeMonic(PAElement& f) const
   FieldElement leadCoeffInv = mField.invert(leadCoeff);
   for (Term& t : f.polynomial)
     t.coeff = mField.multiply(t.coeff,leadCoeffInv);
+}
+
+PAElement PathAlgebra::one(){
+  std::vector<PathID> vertices;
+  std::vector<FieldElement> coeffs;
+  for(int vertexID = 0; vertexID < this->mGraph.vertexList.size(); vertexID++){
+    vertices.push_back(this->multiplyPaths(vertexID, vertexID));
+    coeffs.push_back(1);
+  }
+  return PAElement(vertices, coeffs);
 }
