@@ -153,14 +153,37 @@ int main(int argc, char** argv)
    PAElement expXplusY2;
    PAElement expXplusYSC;
    PAElement bigMult;
-   myPathAlgebra2.exponent(expXplusY,sumxy,2);
-   myPathAlgebra2.powers_of_2_exponent(expXplusY2,sumxy,2);
+
+   // powers_of_2_exponent test. WILL RUN SYSTEM KILL
+   /*
+   for(int exp = 0; exp < 32; exp++){
+
+     auto start1 = std::chrono::high_resolution_clock::now();
+     myPathAlgebra2.exponent(expXplusY,sumxy,exp);
+     auto end1 = std::chrono::high_resolution_clock::now();
+     auto start2 = std::chrono::high_resolution_clock::now();
+     myPathAlgebra2.powers_of_2_exponent(expXplusY2,sumxy,exp);
+     auto end2 = std::chrono::high_resolution_clock::now();
+
+     auto duration1 = duration_cast<std::chrono::microseconds>(end1-start1);
+     auto duration2 = duration_cast<std::chrono::microseconds>(end2-start2);
+
+     std::cout << "Exponent: " << exp << std::endl;
+     std::cout << "Duration for normal exponent: " << duration1.count() << " microseconds" << std::endl;
+     std::cout << "Duration for powers of 2: " << duration2.count() << " microseconds" << std::endl;
+     if(duration1.count() != 0 && duration2.count() != 0)
+       std::cout << "Ratio (powers_of_2/normal): " << (float)duration2.count()/(float)duration1.count() << std::endl;
+     else
+       std::cout << "Ratio (powers_of_2/normal): " << 0 << std::endl;
+   }
+   */
+
 
    //bool areEqual = (expXplusY == expXplusY2);
    //if (areEqual) std::cout << "Exponents are equal." << std::endl;
    //else std::cout << "Exponents not equal." << std::endl;
    
-   myPathAlgebra2.exponentSC(expXplusYSC,sumxy,7);
+   //myPathAlgebra2.exponentSC(expXplusYSC,sumxy,7);
 
    //auto startTime = std::chrono::high_resolution_clock::now();
    //myPathAlgebra2.multiply(bigMult,expXplusY,expXplusY);
@@ -184,12 +207,14 @@ int main(int argc, char** argv)
    std::cout << "one: ";
    myPathAlgebra2.printPAElementByLabel(std::cout, myPathAlgebra2.one());
    std::cout << std::endl;
+   /*
    std::cout << "orig code: ";
    myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY);
    std::cout << std::endl;
    std::cout << "pow2 code: ";
    myPathAlgebra2.printPAElementByLabel(std::cout, expXplusY2);
    std::cout << std::endl;
+   */
 
    //myPathAlgebra2.printPathTable();
 

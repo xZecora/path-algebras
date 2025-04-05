@@ -202,7 +202,7 @@ void PathAlgebra::multiplyShortLeft(PAElement &result, const PAElement &shortPol
    add(result,tempVec);
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+   //std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
@@ -219,7 +219,7 @@ void PathAlgebra::multiplyShortRight(PAElement &result, const PAElement &longPol
    add(result,tempVec);
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
-   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+   //std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::leftMultiply(PAElement &result, const Path &p, const FieldElement &c, const PAElement &f)
@@ -300,22 +300,22 @@ void PathAlgebra::rightMultiply(PAElement &result, const PAElement&f, const Path
 }
 
 void PathAlgebra::exponent(PAElement &result, const PAElement &f, long n) {
-   // exponents must be nonnegative
-   assert(n >= 0);
-   switch (n) {
-     case 0:
-        //result = paOne;
-        break;
-     case 1:
-	result = f;
-	break;
-     default:
-        result = f;
-        for (auto i = 1; i < n; ++i)
+  // exponents must be nonnegative
+  assert(n >= 0);
+  switch (n) {
+    case 0:
+      result = one();
+      break;
+    case 1:
+	    result = f;
+	    break;
+    default:
+      result = f;
+      for (auto i = 1; i < n; ++i)
 	{
-	   PAElement tmp;
-	   multiply(tmp, result, f);
-	   result = tmp;
+    PAElement tmp;
+    multiply(tmp, result, f);
+    result = tmp;
 	}
    }
 }
@@ -579,7 +579,7 @@ void PathAlgebra::multiplyShortLeftSC(PAElement &result, const PAElement &shortP
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
    sumCollector.printTime(std::cout);
-   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+   //std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::multiplyShortRightSC(PAElement &result, const PAElement &longPoly, const PAElement &shortPoly)
@@ -599,7 +599,7 @@ void PathAlgebra::multiplyShortRightSC(PAElement &result, const PAElement &longP
    auto endTime = std::chrono::high_resolution_clock::now();
    auto duration = duration_cast<std::chrono::microseconds>(endTime-startTime);
    sumCollector.printTime(std::cout);
-   std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
+   //std::cout << "Duration for vector sum: " << duration.count() << "ms" << std::endl << std::flush;
 }
 
 void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
@@ -626,6 +626,8 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
 void PathAlgebra::powers_of_2_exponent(PAElement &result, const PAElement &f, long n) {
   PAElement currpw = f;
   result = one();
+  if(n == 0)
+    return;
   for(int i=0; i < 8*sizeof(long);i++){
     PAElement tmp, temp;
     if(n >> i & 1){
@@ -784,7 +786,8 @@ PAElement PathAlgebra::one(){
   std::vector<PathID> vertices;
   std::vector<FieldElement> coeffs;
   for(int vertexID = 0; vertexID < this->mGraph.vertexList.size(); vertexID++){
-    vertices.push_back(this->multiplyPaths(vertexID, vertexID));
+    Path vert(vertexID);
+    vertices.push_back(this->multiplyPaths(vert, vert));
     coeffs.push_back(1);
   }
   return PAElement(vertices, coeffs);
