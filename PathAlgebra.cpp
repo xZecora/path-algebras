@@ -626,8 +626,6 @@ void PathAlgebra::exponentSC(PAElement &result, const PAElement &f, long n) {
 void PathAlgebra::powers_of_2_exponent(PAElement &result, const PAElement &f, long n) {
   PAElement currpw = f;
   result = one();
-  if(n == 0)
-    return;
   for(int i=0; i < 8*sizeof(long);i++){
     PAElement tmp, temp;
     if(n >> i & 1){
