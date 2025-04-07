@@ -708,8 +708,8 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
 
   std::priority_queue<OverlapInfo, std::vector<OverlapInfo>, OverlapCompare> overlapQueue;
 
-  for(int i = 0; i < newGenerators.size(); i++){ // iterate over the generator list fully
-    for(int j = 0; j < newGenerators.size(); j++){ // iterate over the generator list up to the outer loops position
+  for(int i = 0; i < generators.size(); i++){ // iterate over the generator list fully
+    for(int j = 0; j < generators.size(); j++){ // iterate over the generator list up to the outer loops position
       std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
       for(auto overlap : newOverlaps)
       {
