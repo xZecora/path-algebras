@@ -75,10 +75,10 @@ Compare PathOrder::lengthLexCompare(const Path& path1, const Path& path2) const
 
   for(int i = 0; i < path1.length(); i++)
   {
-     if(path1List[i] < path2List[i])
-       return Compare::GT;
-     if(path1List[i] > path2List[i])
-       return Compare::LT;
+    if(path1List[i] < path2List[i])
+      return Compare::GT;
+    if(path1List[i] > path2List[i])
+      return Compare::LT;
   }
 
   return Compare::EQ;

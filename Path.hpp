@@ -47,9 +47,15 @@ public:
       mStartVertex(startVertex),
       mEndVertex(endVertex),
       mPathID(-1),  // -1 indicates that path id is currently unknown
-      mPath(pathEdgeList)
-  {
-  }
+      mPath(pathEdgeList){}
+
+  Path(const Path& path1, const Path& path2)
+   :  mIsZero(false),
+      mIsVertex(false),
+      mStartVertex(path1.mStartVertex),
+      mEndVertex(path2.mEndVertex),
+      mPathID(-1),
+      mPath(concatVectors(path1.mPath, path2.mPath)){}
 
   explicit Path(VertexID vertexID)   // make explicit to avoid accidental calls to contains/find on PathIDs.
                                      // in fact, should we just make PathID and VertexID structs?

@@ -32,10 +32,8 @@ PathID PathAlgebra::multiplyPaths(const Path& path1, const Path& path2)
     }
   }
 
-  // TODO Write a check for if either path is just a vertex, return whichever is not if compatible.
   if (!(path1.mStartVertex == -1 || path2.mStartVertex == -1) && path1.mEndVertex == path2.mStartVertex){
-    // perhaps have a constructor for concatenation?
-    Path newPath = Path(path1.mStartVertex, path2.mEndVertex, concatVectors(path1.mPath, path2.mPath), false);
+    Path newPath = Path(path1, path2);
 
     return mPathTable.findOrAdd(newPath);
   } else {
