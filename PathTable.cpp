@@ -8,14 +8,13 @@ PathID PathTable::addToTable(const Path& path) {
   return newPathID;
 }
 
-PathID PathTable::findOrAdd(const Path& path)
-{
-    auto lookup = this->mReversePathDictionary.find(path);
-    PathID newPathID;
-    if(lookup == this->mReversePathDictionary.end()) {
-      newPathID = addToTable(path);
-    } else {
-      newPathID = lookup->second;
-    }
-    return newPathID;
+PathID PathTable::findOrAdd(const Path& path) {
+  auto lookup = this->mReversePathDictionary.find(path);
+  PathID newPathID;
+  if(lookup == this->mReversePathDictionary.end()) {
+    newPathID = addToTable(path);
+  } else {
+    newPathID = lookup->second;
+  }
+  return newPathID;
 }
