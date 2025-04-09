@@ -6,6 +6,12 @@ CPPFLAGS=-std=c++20 -I.
 main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
 	$(CPP) $(CPPFLAGS) -o main main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
 
+example: example.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
+	$(CPP) $(CPPFLAGS) -o example example.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
+
+example.o : example.cpp
+	$(CPP) $(CPPFLAGS) -c example.cpp
+
 main.o : main.cpp
 	$(CPP) $(CPPFLAGS) -c main.cpp
 

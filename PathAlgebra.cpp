@@ -702,8 +702,8 @@ PAElement PathAlgebra::divideOverlap(std::vector<PAElement> divisors, OverlapInf
 
 
 std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &generators,
-						int maximiumDegree, 
-						int maximumSize) {
+						int maximumSize,
+            int maximumDegree) {
   std::vector<PAElement> newGenerators = generators;
 
   std::priority_queue<OverlapInfo, std::vector<OverlapInfo>, OverlapCompare> overlapQueue;
@@ -711,14 +711,8 @@ std::vector<PAElement> PathAlgebra::Buchbergers(const std::vector<PAElement> &ge
   for(int i = 0; i < generators.size(); i++){ // iterate over the generator list fully
     for(int j = 0; j < generators.size(); j++){ // iterate over the generator list up to the outer loops position
       std::vector<OverlapInfo> newOverlaps = Buchbergers_processOverlaps(generators, i, j);
-      for(auto overlap : newOverlaps)
-      {
-	std::cout << "(" << overlap.leftIndex << ","
-		         << overlap.rightIndex << ","
-		         << overlap.overlapLocation << ","
-		         << overlap.lcmSize << ","
-		         << overlap.overlapSize << ")" << std::endl << std::flush;
-	overlapQueue.push(overlap);
+      for(auto overlap : newOverlaps){
+	      overlapQueue.push(overlap);
       }
     }
   }

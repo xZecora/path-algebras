@@ -1,5 +1,5 @@
 \#*
 *.o
+example
 main
-main.o
 \#*\#

@@ -72,9 +72,9 @@ public:
   std::pair<int,int> isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID);
   std::vector<int> findOverlaps(const PathID& prefix, const PathID& suffix) const;
 
-  void addToPathTable(Path& path)
+  PathID addToPathTable(Path& path)
   {
-    this->mPathTable.addToTable(path);
+    return this->mPathTable.addToTable(path);
   }
 
   PAElement one();
@@ -96,7 +96,7 @@ public:
 
   void printPathTable() const;
 
-  std::vector<PAElement> Buchbergers(const std::vector<PAElement> &generators, int maximiumDegree, int maximumSize = 0);
+  std::vector<PAElement> Buchbergers(const std::vector<PAElement> &generators, int maximiumSize, int maximumDegree = 0);
   std::pair<PAElement,PAElement> Buchbergers_prefix_suffix(const PAElement &first, const PAElement &second);
   std::vector<OverlapInfo> Buchbergers_processOverlaps(const std::vector<PAElement> &list, const int &leftIndex, const int &rightIndex);
 
