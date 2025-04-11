@@ -497,10 +497,8 @@ PAElement PathAlgebra::dividePAElement(const std::vector<PAElement>divisors, con
 std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDict, const PathID& superPathID){
   std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
   size_t wordLen = mPathTable.mPathDictionary[superPathID].length();
-  for (int i = 0; i < wordLen; i++)
-  {
-    for (int j = 0; j < subIDDict.size(); ++j)
-    {
+  for (int i = 0; i < wordLen; i++){
+    for (int j = 0; j < subIDDict.size(); ++j){
       if(wordLen-i >= mPathTable.mPathDictionary[subIDDict[j]].length() &&
          word[i] == mPathTable.mPathDictionary[subIDDict[j]].mPath[0] &&
          std::equal(word.begin()+i,
@@ -510,6 +508,37 @@ std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDic
     }
   }
   return {-1,-1};
+}
+
+int PathAlgebra::KMP_isSubword(const PathID& subPathID, const PathID& superPathID) {
+  std::vector<EdgeID> subword = mPathTable.mPathDictionary[subPathID].getEdgeList();
+  std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
+  size_t wordLen = word.size();
+  size_t subLen = subword.size();
+  
+  for (int i = 0; i < wordLen; i++){
+    if(wordLen-i <= subLen)
+      break;
+    if(word[i] == subword[0]){
+      for(int j = 0, i2 = i; j < subLen; j++, i2++){
+        int initialI = i;
+        if(word[i2] != subword[j]){
+          if(i == initialI)
+            i = i2;
+          break;
+        }
+
+        if(word[i2] == subword[0]){
+          i=i2;
+        }
+
+        if(j == subLen - 1)
+          return initialI;
+      }
+    }
+  }
+
+  return -1;
 }
 
 int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
