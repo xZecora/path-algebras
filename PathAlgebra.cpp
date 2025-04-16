@@ -510,6 +510,7 @@ std::pair<int,int> PathAlgebra::isAnySubword(const std::vector<PathID>& subIDDic
   return {-1,-1};
 }
 
+/*
 int PathAlgebra::KMP_isSubword(const PathID& subPathID, const PathID& superPathID) {
   std::vector<EdgeID> subword = mPathTable.mPathDictionary[subPathID].getEdgeList();
   std::vector<EdgeID> word = mPathTable.mPathDictionary[superPathID].getEdgeList();
@@ -540,6 +541,7 @@ int PathAlgebra::KMP_isSubword(const PathID& subPathID, const PathID& superPathI
 
   return -1;
 }
+*/
 
 int PathAlgebra::isSubword(const PathID& subPathID, const PathID& superPathID) {
   std::vector<EdgeID> subword = mPathTable.mPathDictionary[subPathID].getEdgeList();

@@ -6,7 +6,9 @@
 class PathOrder {
 public:
     
-  PathOrder(const std::vector<WeightVector>& edgeWeights){
+  PathOrder(const std::vector<WeightVector>& edgeWeights, const std::vector<int>& edgeOrder = {}) : 
+    mEdgeOrder(edgeOrder)
+  {
     mWeightLength = edgeWeights[0].size();
     mHasWeights = true;
     for (auto& wt : edgeWeights) {
@@ -17,8 +19,15 @@ public:
     }
   }
 
+  PathOrder(const std::vector<int>& edgeOrder) :
+    mEdgeWeights(),
+    mEdgeOrder(edgeOrder),
+    mWeightLength(0),
+    mHasWeights(false) {};
+
   PathOrder() :
     mEdgeWeights(),
+    mEdgeOrder({}),
     mWeightLength(0),
     mHasWeights(false) {};
 
@@ -29,6 +38,7 @@ private:
   WeightVector pathWeight(const Path& path) const;
 
   std::vector<WeightVector> mEdgeWeights;
+  std::vector<int> mEdgeOrder;
   int mWeightLength;
   bool mHasWeights;
 };
