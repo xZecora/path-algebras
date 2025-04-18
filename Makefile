@@ -9,8 +9,14 @@ main: main.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOr
 example: example.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
 	$(CPP) $(CPPFLAGS) -o example example.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
 
+example2: pathGBExample.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
+	$(CPP) $(CPPFLAGS) -o example pathGBExample.o Field.o Graph.o PathAlgebra.o Path.o PathTable.o PAElement.o PathOrder.o SumCollector.o
+
 example.o : example.cpp
 	$(CPP) $(CPPFLAGS) -c example.cpp
+
+pathGBExample.o : pathGBExample.cpp
+	$(CPP) $(CPPFLAGS) -c pathGBExample.cpp
 
 main.o : main.cpp
 	$(CPP) $(CPPFLAGS) -c main.cpp
